@@ -1,4 +1,5 @@
 #include <Novice.h>
+#include "Matrix4x4.h"
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
 
@@ -10,6 +11,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);
+
+	Vector3 translate(4.1f, 2.6f, 0.8f);
+	Vector3 scale{ 1.5f,5.2f,7.3f };
+	Matrix4x4 tran
+
 
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
