@@ -2,6 +2,22 @@
 #include "Matrix4x4.h"
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
+static const int kColumnWidth = 20;
+static const int kRowHeight = 40;
+void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix) {
+	for (int row = 0; row < 4; row++) {
+		for (int column = 0; column < 4; ++column) {
+			Novice::ScreenPrintf(
+				x + column * kColumnWidth, y + row * kRowHeight, "%6.02f", matrix.m[row][column]
+			);
+		}
+	}
+}
+
+
+
+
+
 
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -14,7 +30,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vector3 translate(4.1f, 2.6f, 0.8f);
 	Vector3 scale{ 1.5f,5.2f,7.3f };
-	Matrix4x4 tran
+
+	Matrix4x4 translateMatrix = MatrixMath::MakeTranslate(translate);
+
+	Matrix4x4 scaleMatrix = MatrixMath::MakeScale(scale);
+
+	Vector3 point{ 2.3f,3.8f,1.4f };
+
+	Matrix4x4 transformMatrix = {
+		1.0f,2.0f,3.0f,4.0f,
+		3.0f,1.0f,1.0f,2.0f,
+		1.0f,4.0f,2.0f,3.0f,
+		2.0f,2.0f,1.0f,3.0f
+	};
+
+	Vector3 transformed = MatrixMath::Transform(point, transformMatrix);
+
 
 
 	// キー入力結果を受け取る箱
