@@ -6,11 +6,11 @@ struct Matrix4x4 {
 };
 
 namespace MatrixMath {
-	// •½sˆÚ“®s—ñ
+	// å¹³è¡Œç§»å‹•è¡Œåˆ—
 	Matrix4x4 MakeTranslate(const Vector3& translate);
-	// Šg‘åk¬s—ñ
+	// æ‹¡å¤§ç¸®å°è¡Œåˆ—
 	Matrix4x4 MakeScale(const Vector3& scale);
-	// À•W•ÏŠ·
+	// åº§æ¨™å¤‰æ›
 	Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 
 }
