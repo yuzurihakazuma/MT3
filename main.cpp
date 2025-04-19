@@ -2,8 +2,8 @@
 #include "Matrix4x4.h"
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
-static const int kColumnWidth = 60;
-static const int kRowHeight = 40;
+static const int kColumnWidth = 40;
+static const int kRowHeight = 30;
 // Matrixを綺麗に並べるための関数
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label) {
 	for (int row = 0; row < 4; row++) {
@@ -21,30 +21,15 @@ struct Vector3 {
 	float y;
 	float z;
 };
-// スカラー倍
- Vector3 Multiply(float scalar, const Vector3& v) {
-
-	Vector3 result = {};
-
-	result.x = scalar * v.x;
-	result.y = scalar * v.y;
-	result.z = scalar * v.z;
-
-	return result;
-}
- Vector3 rotate{ 0.4f,1.43f,-0.8f };
-
- Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateX(rotate.x);
- Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateX(rotate.y);
- Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateX(rotate.z);
- Matrix4x4 rotateXYZMatrix = Multiply(float(rotateXMatrix), ())
 
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	
-	
+ Vector3 rotate{ 0.4f,1.43f,-0.8f };
+
+ 
 
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);
@@ -66,6 +51,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 		
+		Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateX(rotate.x);
+		Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateX(rotate.y);
+		Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateX(rotate.z);
+		Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateXMatrix, MatrixMath::Multiply(rotateYMatrix, rotateZMatrix));
+
 		///
 		/// ↑更新処理ここまで
 		///
@@ -73,6 +63,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
+
+		MatrixScreenPrintf(0, 0, rotateXMatrix, "rotateXMatrix");
+		MatrixScreenPrintf(0, kRowHeight*5, rotateYMatrix, "rotateYMatrix");
+		MatrixScreenPrintf(0, kRowHeight*5*2, rotateZMatrix, "rotateZMatrix");
+		MatrixScreenPrintf(0, kRowHeight*5*3, rotateXYZMatrix, "rotateXYZMatrix");
+
+
 
 		///
 		/// ↑描画処理ここまで
