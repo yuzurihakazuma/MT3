@@ -21,9 +21,28 @@ struct Vector3 {
 	float y;
 	float z;
 };
+// スカラー倍
+ Vector3 Multiply(float scalar, const Vector3& v) {
+
+	Vector3 result = {};
+
+	result.x = scalar * v.x;
+	result.y = scalar * v.y;
+	result.z = scalar * v.z;
+
+	return result;
+}
+ Vector3 rotate{ 0.4f,1.43f,-0.8f };
+
+ Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateX(rotate.x);
+ Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateX(rotate.y);
+ Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateX(rotate.z);
+ Matrix4x4 rotateXYZMatrix = Multiply(float(rotateXMatrix), ())
+
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+	
 	
 	
 
