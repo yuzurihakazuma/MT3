@@ -1,7 +1,26 @@
 #include <Novice.h>
+#include "Matrix4x4.h"
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
+static const int kColumnWidth = 60;
+static const int kRowHeight = 40;
+// Matrixを綺麗に並べるための関数
+void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label) {
+	for (int row = 0; row < 4; row++) {
+		for (int column = 0; column < 4; ++column) {
+			Novice::ScreenPrintf(
+				x + column * kColumnWidth, y + row * kRowHeight, "%6.02f", matrix.m[row][column]
+			);
+		}
+	}
+	Novice::ScreenPrintf(x, y - 20, "%s", label);// 関数の名前
+}
 
+struct Vector3 {
+	float x;
+	float y;
+	float z;
+};
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
