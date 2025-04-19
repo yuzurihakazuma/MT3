@@ -12,5 +12,6 @@ namespace MatrixMath {
 	// Z²‚Ì‰ñ“]s—ñ
 	Matrix4x4 MakeRotateZ(float radian);
 
-
+	// s—ñ‚ÌÏ
+	Matrix4x4 Multipty(const Matrix4x4& m1, const Matrix4x4& m2);
 }
