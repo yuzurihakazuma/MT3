@@ -11,7 +11,6 @@ namespace MatrixMath {
 	Matrix4x4 MakeRotateY(float radian);
 	// Z軸の回転行列
 	Matrix4x4 MakeRotateZ(float radian);
-
 	// 行列の積
 	Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 }

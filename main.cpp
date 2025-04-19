@@ -2,19 +2,26 @@
 #include "Matrix4x4.h"
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
-static const int kColumnWidth = 40;
+static const int kColumnWidth = 60;
 static const int kRowHeight = 30;
 // Matrixを綺麗に並べるための関数
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label) {
+	
+	// 通常時：ラベルは上に表示（ただし見切れ防止）
+	int labelY = y - 20;
+	if (labelY < 0) {
+		labelY = 0;
+	}
+	Novice::ScreenPrintf(x, labelY, "%s", label);
+
 	for (int row = 0; row < 4; row++) {
 		for (int column = 0; column < 4; ++column) {
 			Novice::ScreenPrintf(
-				x + column * kColumnWidth, y + row * kRowHeight, "%6.02f", matrix.m[row][column]
+				x + column * kColumnWidth, (y+20) + row * kRowHeight, "%6.02f", matrix.m[row][column]
 			);
 		}
 	}
-	Novice::ScreenPrintf(x, y - 20, "%s", label);// 関数の名前
-}
+	}
 
 struct Vector3 {
 	float x;
@@ -50,10 +57,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
-		
+		// X軸の回転行列を生成
 		Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateX(rotate.x);
-		Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateX(rotate.y);
-		Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateX(rotate.z);
+		// Y軸の回転行列を生成
+		Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateY(rotate.y);
+		// Z軸の回転行列を生成
+		Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZ(rotate.z);
+		// Z軸、Y軸、X軸の順に回転を合成
 		Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateXMatrix, MatrixMath::Multiply(rotateYMatrix, rotateZMatrix));
 
 		///
