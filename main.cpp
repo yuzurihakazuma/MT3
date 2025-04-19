@@ -13,9 +13,7 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix , const char* labe
 			);
 		}
 	}
-	
 	Novice::ScreenPrintf(x, y-20, "%s", label);// 関数の名前
-
 }
 
 // x座標 y座標 z座標　関数を綺麗に並べるための関数
