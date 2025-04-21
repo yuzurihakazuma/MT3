@@ -1,4 +1,6 @@
 #include "Matrix4x4.h"
+#include <math.h>
+#include <cassert>
 
 // 4x4s—ñ‚ÌÏ
 Matrix4x4 MatrixMath::Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
