@@ -22,8 +22,6 @@ void VectorScreenPrintf(int x, int y, Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x + kColumnWidth, y, "%0.02f", vector.y);//yのフォーマット
 	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%0.02f", vector.z);//zのフォーマット
 	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%s", label); //関数の名前
-
-
 }
 
 
