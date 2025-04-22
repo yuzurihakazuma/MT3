@@ -6,7 +6,7 @@ static const int kColumnWidth = 60;
 static const int kRowHeight = 30;
 // Matrixを綺麗に並べるための関数
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label) {
-	
+
 	// 通常時：ラベルは上に表示（ただし見切れ防止）
 	int labelY = y - 20;
 	if (labelY < 0) {
@@ -17,11 +17,11 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label
 	for (int row = 0; row < 4; row++) {
 		for (int column = 0; column < 4; ++column) {
 			Novice::ScreenPrintf(
-				x + column * kColumnWidth, (y+20) + row * kRowHeight, "%6.02f", matrix.m[row][column]
+				x + column * kColumnWidth, (y + 20) + row * kRowHeight, "%6.02f", matrix.m[row][column]
 			);
 		}
 	}
-	}
+}
 
 struct Vector3 {
 	float x;
@@ -32,11 +32,11 @@ struct Vector3 {
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	
-	
- Vector3 rotate{ 0.4f,1.43f,-0.8f };
 
- 
+
+	Vector3 rotate{ 0.4f,1.43f,-0.8f };
+
+
 
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);
@@ -75,9 +75,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		MatrixScreenPrintf(0, 0, rotateXMatrix, "rotateXMatrix");
-		MatrixScreenPrintf(0, kRowHeight*5, rotateYMatrix, "rotateYMatrix");
-		MatrixScreenPrintf(0, kRowHeight*5*2, rotateZMatrix, "rotateZMatrix");
-		MatrixScreenPrintf(0, kRowHeight*5*3, rotateXYZMatrix, "rotateXYZMatrix");
+		MatrixScreenPrintf(0, kRowHeight * 5, rotateYMatrix, "rotateYMatrix");
+		MatrixScreenPrintf(0, kRowHeight * 5 * 2, rotateZMatrix, "rotateZMatrix");
+		MatrixScreenPrintf(0, kRowHeight * 5 * 3, rotateXYZMatrix, "rotateXYZMatrix");
 
 
 
