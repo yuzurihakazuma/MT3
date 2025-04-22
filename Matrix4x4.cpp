@@ -96,7 +96,17 @@ Matrix4x4 MatrixMath::MakeAffine(const Vector3& scale, const Vector3& rotate, co
     
     Matrix4x4 scaleMatrix = MatrixMath::MakeScale(scale);
     
-    Matrix4x4 rotateMatrix=MatrixMath::Multiply()
+    Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateX(rotate.x);
+    // Y²‚Ì‰ñ“]s—ñ‚ğ¶¬
+    Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateY(rotate.y);
+    // Z²‚Ì‰ñ“]s—ñ‚ğ¶¬
+    Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZ(rotate.z);
+    // Z²AY²AX²‚Ì‡‚É‰ñ“]‚ğ‡¬
+    Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateXMatrix, MatrixMath::Multiply(rotateYMatrix, rotateZMatrix));
     
+    Matrix4x4 translateMatrix = MatrixMath::MakeTranslate(translate);
+
+    result=
+
     return Matrix4x4();
 }
