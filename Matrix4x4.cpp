@@ -89,13 +89,13 @@ Matrix4x4 MatrixMath::MakeRotateZ(float radian) {
 
     return result;// Z軸の回転行列を返す
 }
-
+// 3次元アフィン変換行列
 Matrix4x4 MatrixMath::MakeAffine(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 	
     Matrix4x4 result = {};
-    
+    // 拡大縮小を生成
     Matrix4x4 scaleMatrix = MatrixMath::MakeScale(scale);
-    
+    // X軸の回転行列を生成
     Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateX(rotate.x);
     // Y軸の回転行列を生成
     Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateY(rotate.y);
@@ -103,10 +103,10 @@ Matrix4x4 MatrixMath::MakeAffine(const Vector3& scale, const Vector3& rotate, co
     Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZ(rotate.z);
     // Z軸、Y軸、X軸の順に回転を合成
     Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateXMatrix, MatrixMath::Multiply(rotateYMatrix, rotateZMatrix));
-    
+    // 平行移動を生成
     Matrix4x4 translateMatrix = MatrixMath::MakeTranslate(translate);
+    
+    result = MatrixMath::Multiply(translateMatrix, MatrixMath::Multiply(rotateXYZMatrix, scaleMatrix));
 
-    result=
-
-    return Matrix4x4();
+    return result;
 }
