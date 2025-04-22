@@ -2,6 +2,8 @@
 #include "Matrix4x4.h"
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
+using namespace MatrixMath;
+
 static const int kColumnWidth = 60;
 static const int kRowHeight = 30;
 // Matrixを綺麗に並べるための関数
@@ -58,13 +60,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 		// X軸の回転行列を生成
-		Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateX(rotate.x);
+		Matrix4x4 rotateXMatrix = MakeRotateX(rotate.x);
 		// Y軸の回転行列を生成
-		Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateY(rotate.y);
+		Matrix4x4 rotateYMatrix = MakeRotateY(rotate.y);
 		// Z軸の回転行列を生成
-		Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZ(rotate.z);
+		Matrix4x4 rotateZMatrix = MakeRotateZ(rotate.z);
 		// Z軸、Y軸、X軸の順に回転を合成
-		Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateXMatrix, MatrixMath::Multiply(rotateYMatrix, rotateZMatrix));
+		Matrix4x4 rotateXYZMatrix = Multiply(rotateXMatrix, Multiply(rotateYMatrix, rotateZMatrix));
 
 		///
 		/// ↑更新処理ここまで
