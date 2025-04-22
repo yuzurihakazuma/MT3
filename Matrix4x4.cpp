@@ -96,12 +96,12 @@ Matrix4x4 MatrixMath::MakeAffine(const Vector3& scale, const Vector3& rotate, co
     // 拡大縮小を生成
     Matrix4x4 scaleMatrix = MatrixMath::MakeScale(scale);
  
-    // X軸の回転行列を生成
-    Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateX(rotate.x);
-    // Y軸の回転行列を生成
-    Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateY(rotate.y);
     // Z軸の回転行列を生成
     Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZ(rotate.z);
+    // Y軸の回転行列を生成
+    Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateY(rotate.y);
+    // X軸の回転行列を生成
+    Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateX(rotate.x);
     // Z軸、Y軸、X軸の順に回転を合成
     Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateXMatrix, MatrixMath::Multiply(rotateYMatrix, rotateZMatrix));
     
