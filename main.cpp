@@ -58,8 +58,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		
 		Matrix4x4 worldMatrix = MatrixMath::MakeAffine(scale, rotate, translate);
 
-
-
 		///
 		/// ↑更新処理ここまで
 		///

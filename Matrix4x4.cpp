@@ -28,7 +28,7 @@ Matrix4x4 MatrixMath::MakeTranslate(const Vector3& translate) {
 	result.m[2][2] = 1.0f;
 	result.m[3][3] = 1.0f;
 	// 平行移動の成分
-	result.m[0][0] = translate.x;
+	result.m[3][0] = translate.x;
 	result.m[3][1] = translate.y;
 	result.m[3][2] = translate.z;
 
@@ -96,19 +96,23 @@ Matrix4x4 MatrixMath::MakeAffine(const Vector3& scale, const Vector3& rotate, co
     // 拡大縮小を生成
     Matrix4x4 scaleMatrix = MatrixMath::MakeScale(scale);
  
-    // Z軸の回転行列を生成
-    Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZ(rotate.z);
-    // Y軸の回転行列を生成
-    Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateY(rotate.y);
     // X軸の回転行列を生成
     Matrix4x4 rotateXMatrix = MatrixMath::MakeRotateX(rotate.x);
+    // Y軸の回転行列を生成
+    Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateY(rotate.y);
+    // Z軸の回転行列を生成
+    Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZ(rotate.z);
     // Z軸、Y軸、X軸の順に回転を合成
-    Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateXMatrix, MatrixMath::Multiply(rotateYMatrix, rotateZMatrix));
+    //Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateZMatrix, MatrixMath::Multiply(rotateYMatrix, rotateXMatrix));
+    Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply((rotateXMatrix, rotateYMatrix), rotateZMatrix);
     
     // 平行移動を生成
     Matrix4x4 translateMatrix = MatrixMath::MakeTranslate(translate);
     
-    result = MatrixMath::Multiply(translateMatrix, MatrixMath::Multiply(rotateXYZMatrix, scaleMatrix));
+    //result = MatrixMath::Multiply(translateMatrix, MatrixMath::Multiply(rotateXYZMatrix, scaleMatrix));
+    result = MatrixMath::Multiply(MatrixMath::Multiply(scaleMatrix,rotateXYZMatrix),translateMatrix);
+
+
 
     return result;
 }
