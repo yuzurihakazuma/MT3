@@ -2,6 +2,8 @@
 #include <math.h>
 #include <cassert>
 #include <cmath>
+
+
 // 4x4行列の積
 Matrix4x4 MatrixMath::Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
     Matrix4x4 result;
@@ -102,14 +104,13 @@ Matrix4x4 MatrixMath::MakeAffine(const Vector3& scale, const Vector3& rotate, co
     Matrix4x4 rotateYMatrix = MatrixMath::MakeRotateY(rotate.y);
     // Z軸の回転行列を生成
     Matrix4x4 rotateZMatrix = MatrixMath::MakeRotateZ(rotate.z);
-    // Z軸、Y軸、X軸の順に回転を合成
-    //Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(rotateZMatrix, MatrixMath::Multiply(rotateYMatrix, rotateXMatrix));
-    Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply((rotateXMatrix, rotateYMatrix), rotateZMatrix);
+    // X軸、Y軸、Z軸の順に回転を合成
+    Matrix4x4 rotateXYZMatrix = MatrixMath::Multiply(MatrixMath::Multiply(rotateXMatrix, rotateYMatrix), rotateZMatrix);
     
     // 平行移動を生成
     Matrix4x4 translateMatrix = MatrixMath::MakeTranslate(translate);
     
-    //result = MatrixMath::Multiply(translateMatrix, MatrixMath::Multiply(rotateXYZMatrix, scaleMatrix));
+    // 最終的なアフィン変換行列： T * R * S
     result = MatrixMath::Multiply(MatrixMath::Multiply(scaleMatrix,rotateXYZMatrix),translateMatrix);
 
 

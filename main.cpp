@@ -2,6 +2,7 @@
 #include "Matrix4x4.h"
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
+using namespace MatrixMath;
 
 static const int kColumnWidth = 60;
 static const int kRowHeight = 30;
@@ -29,11 +30,11 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
-	
+	// 回転行列
 	Vector3 scale{ 1.2f,0.79f,-2.1f };
-	
+	// 拡大縮小
 	Vector3 rotate{ 0.4f,1.43f,-0.8f };
-	
+	// 平行移動
 	Vector3 translate{ 2.7f,-4.15f,1.57f };
 
 	// ライブラリの初期化
@@ -56,7 +57,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 		
-		Matrix4x4 worldMatrix = MatrixMath::MakeAffine(scale, rotate, translate);
+		// アフィン
+		Matrix4x4 worldMatrix = MakeAffine(scale, rotate, translate);
 
 		///
 		/// ↑更新処理ここまで
