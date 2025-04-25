@@ -3,6 +3,6 @@
 
 
 struct Matrix4x4 {
-	float m;
+	float m[4][4];
 };
 
