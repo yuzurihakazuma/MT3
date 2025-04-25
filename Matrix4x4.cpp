@@ -2,31 +2,11 @@
 #define _USE_MATH_DEFINES 
 #include <cmath>
 
-// “§‹“Š‰es—ñ
-Matrix4x4 MatrixMath::PerspectiveFov(float fovY, float aspectRatio, float nearClip, float farClip) {
-	
-	Matrix4x4 result = {};
-	
-	// “x”–@‚©‚çƒ‰ƒWƒAƒ“‚É•ÏŠ·
-	float fovY_rad = fovY * (M_PI / 180.0f);
-
-	// ƒRƒ^ƒ“ƒWƒFƒ“ƒg(fovY/2)
-	float f = 1.0f / tanf(fovY_rad / 2.0f);
-
-	// “§‹“Š‰es—ñ‚ÌŠe—v‘fİ’è
-	result.m[0][0] = f / aspectRatio;
-	result.m[1][1] = f;
-	result.m[2][2] = farClip / (farClip - nearClip);
-	result.m[2][3] = 1.0f;
-	result.m[3][2] = (-nearClip * farClip) / (-farClip - nearClip);
-	
-	return result;
-}
-// ³Ë‰es—ñ
+// æ­£å°„å½±è¡Œåˆ—
 Matrix4x4 MatrixMath::Orthographic(float left, float top, float right, float bottom, float nearClip, float farClip) {
-	
+
 	Matrix4x4 result = {};
-	
+
 	result.m[0][0] = 2.0f / (right - left);
 	result.m[1][1] = 2.0f / (top - bottom);
 	result.m[2][2] = 1.0f / (farClip - nearClip);
@@ -35,12 +15,32 @@ Matrix4x4 MatrixMath::Orthographic(float left, float top, float right, float bot
 	result.m[3][2] = nearClip / (nearClip - farClip);
 	result.m[3][3] = 1.0f;
 
-	
+
 	return result;
 }
-// ƒrƒ…[ƒ|[ƒg•ÏŠ·s—ñ
+// é€è¦–æŠ•å½±è¡Œåˆ—
+Matrix4x4 MatrixMath::PerspectiveFov(float fovY, float aspectRatio, float nearClip, float farClip) {
+
+	Matrix4x4 result = {};
+
+	// åº¦æ•°æ³•ã‹ã‚‰ãƒ©ã‚¸ã‚¢ãƒ³ã«å¤‰æ›
+	float fovY_rad = fovY * (static_cast<float>(M_PI) / 180.0f);
+
+	// ã‚³ã‚¿ãƒ³ã‚¸ã‚§ãƒ³ãƒˆ(fovY/2)
+	float f = 1.0f / tanf(fovY_rad / 2.0f);
+
+	// é€è¦–æŠ•å½±è¡Œåˆ—ã®å„è¦ç´ è¨­å®š
+	result.m[0][0] = f / aspectRatio;
+	result.m[1][1] = f;
+	result.m[2][2] = farClip / (farClip - nearClip);
+	result.m[2][3] = 1.0f;
+	result.m[3][2] = (-nearClip * farClip) / (farClip - nearClip);
+
+	return result;
+}
+// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆå¤‰æ›è¡Œåˆ—
 Matrix4x4 MatrixMath::Viewport(float left, float top, float width, float height, float minDepth, float maxDepth) {
-	
+
 	Matrix4x4 result = {};
 
 	result.m[0][0] = width / 2.0f;

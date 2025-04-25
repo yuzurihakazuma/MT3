@@ -7,12 +7,11 @@ struct Matrix4x4 {
 };
 
 namespace MatrixMath {
-
-	// “§Ž‹“Š‰es—ñ
-	Matrix4x4 PerspectiveFov(float fovY, float aspectRatio, float nearClip, float farClip);
-	// ³ŽË‰es—ñ
+	// æ­£å°„å½±è¡Œåˆ—
 	Matrix4x4 Orthographic(float left, float top, float right, float bottom, float nearClip, float farClip);
-	// ƒrƒ…[ƒ|[ƒg•ÏŠ·s—ñ
+	// é€è¦–æŠ•å½±è¡Œåˆ—
+	Matrix4x4 PerspectiveFov(float fovY, float aspectRatio, float nearClip, float farClip);
+	// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆå¤‰æ›è¡Œåˆ—
 	Matrix4x4 Viewport(float left, float top, float width, float height, float minDepth, float maxDepth);
 
 }
