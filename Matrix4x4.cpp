@@ -23,11 +23,8 @@ Matrix4x4 MatrixMath::PerspectiveFov(float fovY, float aspectRatio, float nearCl
 
 	Matrix4x4 result = {};
 
-	// 度数法からラジアンに変換
-	float fovY_rad = fovY * (static_cast<float>(M_PI) / 180.0f);
-
 	// コタンジェント(fovY/2)
-	float f = 1.0f / tanf(fovY_rad / 2.0f);
+	float f = 1.0f / std::tan(fovY / 2.0f);
 
 	// 透視投影行列の各要素設定
 	result.m[0][0] = f / aspectRatio;
