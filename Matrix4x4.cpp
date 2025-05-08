@@ -20,6 +20,9 @@ Matrix4x4 MatrixMath::Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
     return result;
 }
 
+
+
+
 // 平行移動行列
 Matrix4x4 MatrixMath::MakeTranslate(const Vector3& translate) {
 
@@ -48,6 +51,8 @@ Matrix4x4 MatrixMath::MakeScale(const Vector3& scale) {
 
     return result;// 拡大(スケ―リンク)行列を返す
 }
+
+#pragma region 回転行列
 
 //X軸の回転行列
 Matrix4x4 MatrixMath::MakeRotateX(float radian) {
@@ -91,6 +96,8 @@ Matrix4x4 MatrixMath::MakeRotateZ(float radian) {
 
     return result;// Z軸の回転行列を返す
 }
+#pragma endregion
+
 // 3次元アフィン変換行列
 Matrix4x4 MatrixMath::MakeAffine(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 
