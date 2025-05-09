@@ -30,7 +30,7 @@ Matrix4x4 MatrixMath::MakeScale(const Vector3& scale) {
 	
 	return result;// 拡大(スケ―リンク)行列を返す
 }
-
+// 座標変換
 Vector3 MatrixMath::Transform(const Vector3& vector, const Matrix4x4& matrix) {
 
 	Vector3 result = {};
