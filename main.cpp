@@ -1,5 +1,6 @@
 #include <Novice.h>
 #include "Matrix4x4.h"
+#include <cstdint>
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
 using namespace MatrixMath;
@@ -57,8 +58,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 
-		Matrix4x4 projectionMatrix=PerspectiveFov(0.45,float(kW))
+		Matrix4x4 projectionMatrix = PerspectiveFov(0.45, float(kW));
 
+		Matrix4x4 worldViewProgectionMatrix = Viewport(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
+
+		Vector3 screenVertices[3];
+		for (uint32_t i = 0; i < 3; ++i) {
+			Vector3 ndcVertex=
+		}
 
 		///
 		/// ↑更新処理ここまで
