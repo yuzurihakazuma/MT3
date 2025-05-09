@@ -4,6 +4,8 @@ const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
 using namespace MatrixMath;
 
+static const int kColumnWidth = 60;
+static const int kRowHeight = 40;
 // x座標 y座標 z座標　関数を綺麗に並べるための関数
 void VectorScreenPrintf(int x, int y, Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%0.02f", vector.x); //ｘのフォーマット 
@@ -17,10 +19,16 @@ void VectorScreenPrintf(int x, int y, Vector3& vector, const char* label) {
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
+	// クロス積確認用
+
 	Vector3 v1{ 1.2f,-3.9f,2.5f };
 	Vector3 v2{ 2.8f,0.4f,-1.3f };
 	Vector3 cross = Cross(v1, v2);
+	VectorScreenPrintf(0, 0, cross, "Cross");
 
+	Vector3 rotate = { 0.0f,0.0f,0.0f };
+	Vector3 translate = { 0.0f,0.0f,0.0f };
+	Vector3 cameraPos{ 200.0f,200.0f,200.0f };
 
 
 	// ライブラリの初期化
@@ -43,6 +51,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 		
+		Matrix4x4 worldMatrix = MakeAffine({ 1.0f,1.0f,1.0f }, rotate, translate);
+
+		Matrix4x4 cameraMatrix = MakeAffine({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, cameraPos);
+
+		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
+
+		Matrix4x4 projectionMatrix=PerspectiveFov(0.45,float(kW))
+
+
 		///
 		/// ↑更新処理ここまで
 		///
