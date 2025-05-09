@@ -27,6 +27,8 @@ namespace MatrixMath {
 	// ‹ts—ñ
 	Matrix4x4 Inverse(const Matrix4x4& m);
 
+	// À•W•ÏŠ·
+	Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 
 	// ³Ë‰es—ñ
 	Matrix4x4 Orthographic(float left, float top, float right, float bottom, float nearClip, float farClip);
