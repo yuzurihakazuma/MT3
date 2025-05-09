@@ -4,6 +4,16 @@ const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
 using namespace MatrixMath;
 
+// x座標 y座標 z座標　関数を綺麗に並べるための関数
+void VectorScreenPrintf(int x, int y, Vector3& vector, const char* label) {
+	Novice::ScreenPrintf(x, y, "%0.02f", vector.x); //ｘのフォーマット 
+	Novice::ScreenPrintf(x + kColumnWidth, y, "%0.02f", vector.y);//yのフォーマット
+	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%0.02f", vector.z);//zのフォーマット
+	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%s", label); //関数の名前
+}
+
+
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
