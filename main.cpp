@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vector3 rotate = { 0.0f,0.0f,0.0f };
 	Vector3 translate = { 0.0f,0.0f,0.0f };
-	Vector3 cameraPos{ 200.0f,200.0f,200.0f };
+	Vector3 cameraPos{ 50.0f,50.0f,0.0f };
 
 
 	// ライブラリの初期化
@@ -88,7 +88,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Vector3 screenVertices[3];
 		for (uint32_t i = 0; i < 3; ++i) {
 			Vector3 ndcVertex = Transform(kLocalVertices[i], worldViewProjectionMatrix);
-			screenVertices[i] = Transform(ndcVertex, viewMatrix);
+			screenVertices[i] = Transform(ndcVertex, viewportMatrix);
 		}
 
 		///
