@@ -35,6 +35,9 @@ namespace MatrixMath {
 	// ビューポート変換行列
 	Matrix4x4 Viewport(float left, float top, float width, float height, float minDepth, float maxDepth);
 
+	// クロス積
+	Vector3 Cross(const Vector3& v1, const Vector3& v2);
+
 
 }
 

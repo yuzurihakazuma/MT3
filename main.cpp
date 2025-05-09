@@ -1,12 +1,17 @@
 #include <Novice.h>
+#include "Matrix4x4.h"
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
-
+using namespace MatrixMath;
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
-	
+	Vector3 v1{ 1.2f,-3.9f,2.5f };
+	Vector3 v2{ 2.8f,0.4f,-1.3f };
+	Vector3 cross = Cross(v1, v2);
+
+
 
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);
