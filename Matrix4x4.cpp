@@ -1,5 +1,8 @@
 #include "Matrix4x4.h"
-
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <cassert>
+#include <cmath>
 // À•W•ÏŠ·
 Vector3 MatrixMath::Transform(const Vector3& vector, const Matrix4x4& matrix) {
 
