@@ -70,3 +70,7 @@ Matrix4x4 MatrixMath::Viewport(float left, float top, float width, float height,
 	return result;
 }
 
+void DrawaGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport) {
+
+	const float kGridHalfWidth = 2.0f;
+}

@@ -8,7 +8,8 @@ struct Matrix4x4 {
 
 namespace MatrixMath {
 
-
+	// À•W•ÏŠ·
+	Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 	// ³Ë‰es—ñ
 	Matrix4x4 Orthographic(float left, float top, float right, float bottom, float nearClip, float farClip);
 	// “§‹“Š‰es—ñ
@@ -19,3 +20,7 @@ namespace MatrixMath {
 
 
 }
+
+
+void DrawaGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport);
+
