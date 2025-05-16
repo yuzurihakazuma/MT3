@@ -3,6 +3,7 @@
 #include <math.h>
 #include <cassert>
 #include <cmath>
+
 using namespace MatrixMath;
 
 // À•W•ÏŠ·
