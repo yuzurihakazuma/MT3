@@ -1,7 +1,7 @@
 #include "Sphere.h"
 #include <vector>
-#include <cmath> 
 #include <Novice.h>
+#include <cmath>
 
 using namespace MatrixMath;
 
@@ -9,8 +9,8 @@ using namespace MatrixMath;
 void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t coler) {
 
 	const uint32_t kSubdivsion = 16;
-	const float kLonEvery = 2.0f * float(M_PI) / float(kSubdivsion);
-	const float kLatEvery = float(M_PI) / float(kSubdivsion);
+	const float kLonEvery = 2.0f *  / float(kSubdivsion);
+	const float kLatEvery =  M_PI / float(kSubdivsion);
 	// Œy“x‚Ì•ûŒü‚É•ªŠ„
 
 
