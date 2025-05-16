@@ -1,4 +1,6 @@
 #include <Novice.h>
+#include "Sphere.h"
+#include "Matrix4x4.h"
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
 
