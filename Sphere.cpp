@@ -65,7 +65,7 @@ void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4
 
 
 
-void DrawaGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport) {
+void DrawGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport) {
 
 	const float kGridHalfWidth = 2.0f; // Gridの半分の幅
 	const uint32_t kSubdivision = 10;  // 分割数

@@ -42,6 +42,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		
 		// 透視投影行列
 		Matrix4x4 projectionMatrix = PerspectiveFov(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
+		// ビューポート行列
+		Matrix4x4 viewportMatrix = Viewport(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
 
 
@@ -67,6 +69,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//DrawSphere()
 
+		DrawGrid(projectionMatrix, viewportMatrix);
 
 		///
 		/// ↑描画処理ここまで

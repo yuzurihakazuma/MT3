@@ -13,4 +13,4 @@ struct Sphere {
 void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t coler);
 
 // グリッド
-void DrawaGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport);
+void DrawGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport);
