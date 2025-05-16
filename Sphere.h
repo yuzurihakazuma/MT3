@@ -3,9 +3,10 @@
 #include "KamataEngine.h"
 
 struct Sphere {
-	Vector3 center;
-	float radius;
+	Vector3 center; //’†S“_
+	float radius; // ”¼Œa
 };
+
 
 
 // ‹…
