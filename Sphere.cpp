@@ -9,18 +9,18 @@
 using namespace MatrixMath;
 
 
-void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t coler) {
+void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t color) {
 
-	const uint32_t kSubdivsion = 16; // •ªŠ„”
-	const float kLonEvery = 2.0f * float(M_PI) / float(kSubdivsion); // Œo“x•ªŠ„ˆê‚Â•ª‚ÌŠp“x
-	const float kLatEvery = float(M_PI) / float(kSubdivsion); // ˆÜ“x•ªŠ„ˆê‚Â•ª‚ÌŠp“x
-	// ˆÜ“x‚Ì•ûŒü‚É•ªŠ„ -ƒÎ/2-ƒÎ/2
+	const uint32_t kSubdivsion = 16; // åˆ†å‰²æ•°
+	const float kLonEvery = 2.0f * float(M_PI) / float(kSubdivsion); // çµŒåº¦åˆ†å‰²ä¸€ã¤åˆ†ã®è§’åº¦
+	const float kLatEvery = float(M_PI) / float(kSubdivsion); // ç·¯åº¦åˆ†å‰²ä¸€ã¤åˆ†ã®è§’åº¦
+	// ç·¯åº¦ã®æ–¹å‘ã«åˆ†å‰² -Ï€/2-Ï€/2
 	for (uint32_t latIndex = 0; latIndex < kSubdivsion; ++latIndex) {
-		float lat = -float(M_PI) / 2.0f + latIndex * kLatEvery; // Œ»İ‚ÌˆÜ“x
-		// Œo“x‚Ì•ûŒü‚É•ªŠ„ 0-2ƒÎ
+		float lat = -float(M_PI) / 2.0f + latIndex * kLatEvery; // ç¾åœ¨ã®ç·¯åº¦
+		// çµŒåº¦ã®æ–¹å‘ã«åˆ†å‰² 0-2Ï€
 		for (uint32_t lonIndex = 0; lonIndex < kSubdivsion; ++lonIndex) {
-			float lon = lonIndex * kLonEvery;// Œ»İ‚ÌŒo“x
-			// worldÀ•WŒn‚Å‚Ìa,b,c‚ğ‹‚ß‚é
+			float lon = lonIndex * kLonEvery;// ç¾åœ¨ã®çµŒåº¦
+			// worldåº§æ¨™ç³»ã§ã®a,b,cã‚’æ±‚ã‚ã‚‹
 			Vector3 a = {
 				sphere.center.x + sphere.radius * std::cos(lat) * std::cos(lon),
 				sphere.center.y + sphere.radius * std::sin(lat),
@@ -43,7 +43,7 @@ void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4
 			};
 
 
-			// a,b,c‚ğScreenÀ•WŒn‚Ü‚Å•ÏŠ·
+			// a,b,cã‚’Screenåº§æ¨™ç³»ã¾ã§å¤‰æ›
 			 
 			Vector3 screenA = Transform(Transform(a, viewProjection), viewport);
 			Vector3 screenB = Transform(Transform(b, viewProjection), viewport);
@@ -51,8 +51,8 @@ void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4
 
 			 
 			 
-			 
-			// ab,bc‚Åü‚ğˆø‚­
+			
+			// ab,bcã§ç·šã‚’å¼•ã
 			Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenB.x), int(screenB.y), color);
 			Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenC.x), int(screenC.y), color);
 
@@ -67,43 +67,43 @@ void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4
 
 void DrawaGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport) {
 
-	const float kGridHalfWidth = 2.0f; // Grid‚Ì”¼•ª‚Ì•
-	const uint32_t kSubdivision = 10;  // •ªŠ„”
-	const float kGridEvery = (kGridHalfWidth * 2.0f) / float(kSubdivision); // ˆê‚Â•ª‚Ì’·‚³
+	const float kGridHalfWidth = 2.0f; // Gridã®åŠåˆ†ã®å¹…
+	const uint32_t kSubdivision = 10;  // åˆ†å‰²æ•°
+	const float kGridEvery = (kGridHalfWidth * 2.0f) / float(kSubdivision); // ä¸€ã¤åˆ†ã®é•·ã•
 
-	// ‰œ‚©‚çè‘O‚Ö‚Ìü‚ğ‹÷X‚Éˆø‚¢‚Ä‚¢‚­
+	// å¥¥ã‹ã‚‰æ‰‹å‰ã¸ã®ç·šã‚’éš…ã€…ã«å¼•ã„ã¦ã„ã
 	for (uint32_t xIndex = 0; xIndex < kSubdivision; ++xIndex) {
-		// ã‚Ìî•ñ‚ğg‚Á‚Äƒ[ƒ‹ƒhÀ•WŒnã‚Ìn“_‚ÆI“_‚ğ‹‚ß‚é
+		// ä¸Šã®æƒ…å ±ã‚’ä½¿ã£ã¦ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ä¸Šã®å§‹ç‚¹ã¨çµ‚ç‚¹ã‚’æ±‚ã‚ã‚‹
 		float x = -kGridHalfWidth + xIndex * kGridEvery;
 
-		// Z•ûŒü‚É‰œ‚©‚çè‘O
+		// Zæ–¹å‘ã«å¥¥ã‹ã‚‰æ‰‹å‰
 		Vector3 start = { x,0.0f,-kGridHalfWidth };
 		Vector3 end = { x,0.0f,kGridHalfWidth };
 
-		// ƒXƒNƒŠ[ƒ“À•WŒn‚Ì•ÏŠ·‚ğ‚©‚¯‚é
+		// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ç³»ã®å¤‰æ›ã‚’ã‹ã‘ã‚‹
 		Vector3 startScreen = Transform(Transform(start, PerspectiveFov), Viewport);
 		Vector3 endScreen = Transform(Transform(end, PerspectiveFov), Viewport);
 
-		// •ÏŠ·‚µ‚½À•W‚ğg‚Á‚Ä•\¦BF‚Í”–‚¢ŠDF(0xAAAAAAFF),Œ´“_‚Í•‚®‚ç‚¢‚ª‚¢‚¢‚ªA‰½‚Å‚à‚¢‚¢
-		uint32_t color = (x == 0) ? 0x000000FF : 0xAAAAAAAFF; //Œ´“_‚Í•A‚»‚êˆÈŠO‚ÍŠDF
+		// å¤‰æ›ã—ãŸåº§æ¨™ã‚’ä½¿ã£ã¦è¡¨ç¤ºã€‚è‰²ã¯è–„ã„ç°è‰²(0xAAAAAAFF),åŸç‚¹ã¯é»’ãã‚‰ã„ãŒã„ã„ãŒã€ä½•ã§ã‚‚ã„ã„
+		uint32_t color = (x == 0) ? 0x000000FFu : 0xAAAAAAFFu; //åŸç‚¹ã¯é»’ã€ãã‚Œä»¥å¤–ã¯ç°è‰²
 
-		Novice::DrawLine(float(startScreen.x), float(startScreen.y),
-			float(endScreen.x), float(endScreen.y), color);
+		Novice::DrawLine(int(startScreen.x), int(startScreen.y),
+			int(endScreen.x), int(endScreen.y), color);
 	}
 
-	// ¶‚©‚ç‰E‚à“¯‚¶‚æ‚¤‚É‡X‚Éˆø‚¢‚Ä‚¢‚­
+	// å·¦ã‹ã‚‰å³ã‚‚åŒã˜ã‚ˆã†ã«é †ã€…ã«å¼•ã„ã¦ã„ã
 	for (uint32_t zIndex = 0; zIndex <= kSubdivision; ++zIndex) {
 		float z = -kGridHalfWidth + zIndex * kGridEvery;
 
-		// ¶‚©‚ç‰E•ûŒü‚Éˆø‚­ƒOƒŠƒbƒhü‚Ìn“_‚ÆI“_iXZ•½–Êj
+		// å·¦ã‹ã‚‰å³æ–¹å‘ã«å¼•ãã‚°ãƒªãƒƒãƒ‰ç·šã®å§‹ç‚¹ã¨çµ‚ç‚¹ï¼ˆXZå¹³é¢ï¼‰
 		Vector3 start = { -kGridHalfWidth, 0.0f, z };
 		Vector3 end = { kGridHalfWidth, 0.0f, z };
 
-		// •ÏŠ·iƒ[ƒ‹ƒhÀ•W ¨ ƒNƒŠƒbƒvÀ•W ¨ ƒXƒNƒŠ[ƒ“À•Wj
+		// å¤‰æ›ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ â†’ ã‚¯ãƒªãƒƒãƒ—åº§æ¨™ â†’ ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ï¼‰
 		Vector3 startScreen = Transform(Transform(start, PerspectiveFov), Viewport);
 		Vector3 endScreen = Transform(Transform(end, PerspectiveFov), Viewport);
 
-		uint32_t color = (z == 0.0f) ? 0x000000FF : 0xAAAAAAFF;
+		uint32_t color = (z == 0.0f) ? 0x000000FFu : 0xAAAAAAFFu;
 		Novice::DrawLine(int(startScreen.x), int(startScreen.y),
 			int(endScreen.x), int(endScreen.y), color);
 	}

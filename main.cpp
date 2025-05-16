@@ -1,6 +1,7 @@
 #include <Novice.h>
 #include "Sphere.h"
 #include "Matrix4x4.h"
+#include "imgui.h"
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
 
@@ -9,6 +10,11 @@ const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	
+	Vector3 cameraTranslate{}
+
+
+
+
 
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);

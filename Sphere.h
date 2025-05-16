@@ -3,14 +3,14 @@
 #include "KamataEngine.h"
 
 struct Sphere {
-	Vector3 center; //’†S“_
-	float radius; // ”¼Œa
+	Vector3 center; //ä¸­å¿ƒç‚¹
+	float radius; // åŠå¾„
 };
 
 
 
-// ‹…
+// çƒ
 void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t coler);
 
-// ƒOƒŠƒbƒh
+// ã‚°ãƒªãƒƒãƒ‰
 void DrawaGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport);

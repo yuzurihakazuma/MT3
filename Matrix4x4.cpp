@@ -6,25 +6,25 @@
 
 using namespace MatrixMath;
 
-// À•W•ÏŠ·
+// åº§æ¨™å¤‰æ›
 Vector3 MatrixMath::Transform(const Vector3& vector, const Matrix4x4& matrix) {
 
 	Vector3 result = {};
-	// À•W‚Ì•ÏŠ·(sƒxƒNƒgƒ‹xs—ñ‚Ì—ñ)
+	// åº§æ¨™ã®å¤‰æ›(è¡Œãƒ™ã‚¯ãƒˆãƒ«xè¡Œåˆ—ã®åˆ—)
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
 	result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + 1.0f * matrix.m[3][1];
 	result.z = vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + 1.0f * matrix.m[3][2];
 	float w = vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + 1.0f * matrix.m[3][3];
-	assert(w != 0.0f); //w‚ª0‚É‚È‚ç‚È‚¢‚æ‚¤‚É‚·‚é
+	assert(w != 0.0f); //wãŒ0ã«ãªã‚‰ãªã„ã‚ˆã†ã«ã™ã‚‹
 
-	// w‚ÅŠ„‚Á‚Ä’Êí‚Ì3ŸŒ³‹óŠÔ‚É–ß‚·
+	// wã§å‰²ã£ã¦é€šå¸¸ã®3æ¬¡å…ƒç©ºé–“ã«æˆ»ã™
 	result.x /= w;
 	result.y /= w;
 	result.z /= w;
-	return result;// •ÏŠ·Œã‚ÌƒxƒNƒgƒ‹‚ğ•Ô‚·
+	return result;// å¤‰æ›å¾Œã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™
 }
 
-// ³Ë‰es—ñ
+// æ­£å°„å½±è¡Œåˆ—
 Matrix4x4 MatrixMath::Orthographic(float left, float top, float right, float bottom, float nearClip, float farClip) {
 
 	Matrix4x4 result = {};
@@ -40,15 +40,15 @@ Matrix4x4 MatrixMath::Orthographic(float left, float top, float right, float bot
 
 	return result;
 }
-// “§‹“Š‰es—ñ
+// é€è¦–æŠ•å½±è¡Œåˆ—
 Matrix4x4 MatrixMath::PerspectiveFov(float fovY, float aspectRatio, float nearClip, float farClip) {
 
 	Matrix4x4 result = {};
 
-	// ƒRƒ^ƒ“ƒWƒFƒ“ƒg(fovY/2)
+	// ã‚³ã‚¿ãƒ³ã‚¸ã‚§ãƒ³ãƒˆ(fovY/2)
 	float f = 1.0f / std::tan(fovY / 2.0f);
 
-	// “§‹“Š‰es—ñ‚ÌŠe—v‘fİ’è
+	// é€è¦–æŠ•å½±è¡Œåˆ—ã®å„è¦ç´ è¨­å®š
 	result.m[0][0] = f / aspectRatio;
 	result.m[1][1] = f;
 	result.m[2][2] = farClip / (farClip - nearClip);
@@ -57,7 +57,7 @@ Matrix4x4 MatrixMath::PerspectiveFov(float fovY, float aspectRatio, float nearCl
 
 	return result;
 }
-// ƒrƒ…[ƒ|[ƒg•ÏŠ·s—ñ
+// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆå¤‰æ›è¡Œåˆ—
 Matrix4x4 MatrixMath::Viewport(float left, float top, float width, float height, float minDepth, float maxDepth) {
 
 	Matrix4x4 result = {};
