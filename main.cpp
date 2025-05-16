@@ -40,6 +40,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 		
+			// ワールド行列
+		Matrix4x4 worldMatrix = MakeAffine({ 1.0f,1.0f,1.0f }, camaraRotate, cameraTranslate);
 		// カメラのワールド行列
 		Matrix4x4 cameraMatrix = MakeAffine({ 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }, cameraPos);
 		// ビュー行列はカメラ行列の逆行列
