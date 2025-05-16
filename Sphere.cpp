@@ -12,9 +12,13 @@ using namespace MatrixMath;
 void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t coler) {
 
 	const uint32_t kSubdivsion = 16; // 分割数
-	const float kLonEvery = 2.0f * float(M_PI) / float(kSubdivsion); //
-	const float kLatEvery = float(M_PI) / float(kSubdivsion);
+	const float kLonEvery = 2.0f * float(M_PI) / float(kSubdivsion); // 経度分割一つ分の角度
+	const float kLatEvery = float(M_PI) / float(kSubdivsion); // 経度分割一つ分の角度
+	// 経度の方向に分割 -π/2-π/2
+	for (uint32_t latIndex = 0; latIndex < kSubdivsion; ++latIndex) {
+		float lat = -pi / 2.
 
+	}
 
 
 }
