@@ -67,7 +67,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		//DrawSphere()
+		DrawSphere(sphere, projectionMatrix, viewportMatrix, RED);
 
 		DrawGrid(projectionMatrix, viewportMatrix);
 
