@@ -2,9 +2,13 @@
 #include "Sphere.h"
 #include "Matrix4x4.h"
 #include <imgui.h>
+
+using namespace MatrixMath;
+
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
-
+const int kWindowWidth = 1280;
+const int kWindowHeight = 720;
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -36,6 +40,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 		
+		// 透視投影行列
+		Matrix4x4 projectionMatrix = PerspectiveFov(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
+
+
+
 #ifdef _DEBUG
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
