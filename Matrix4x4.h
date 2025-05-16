@@ -17,10 +17,10 @@ namespace MatrixMath {
 	// ビューポート変換行列
 	Matrix4x4 Viewport(float left, float top, float width, float height, float minDepth, float maxDepth);
 
+	
 
+	
 
 }
 
-
-void DrawaGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport);
 

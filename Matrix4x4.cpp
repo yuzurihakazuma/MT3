@@ -3,6 +3,8 @@
 #include <math.h>
 #include <cassert>
 #include <cmath>
+using namespace MatrixMath;
+
 // 座標変換
 Vector3 MatrixMath::Transform(const Vector3& vector, const Matrix4x4& matrix) {
 
@@ -70,25 +72,4 @@ Matrix4x4 MatrixMath::Viewport(float left, float top, float width, float height,
 	return result;
 }
 
-void DrawaGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport) {
 
-	const float kGridHalfWidth = 2.0f; // Gridの半分の幅
-	const uint32_t kSubdivision = 10;  // 分割数
-	const float kGridEvery = (kGridHalfWidth * 2.0f) / float(kSubdivision); // 一つ分の長さ
-	
-	// 奥から手前への線を隅々に引いていく
-	for (uint32_t xIndex = 0; xIndex < kSubdivision; ++xIndex) {
-		// 上の情報を使ってワールド座標系上の始点と終点を求める
-		float x = -kGridHalfWidth + xIndex * kGridEvery;
-
-
-		 
-		// スクリーン座標系の変換をかける
-		// 変換した座標を使って表示。色は薄い灰色(0xAAAAAAFF),原点は黒ぐらいがいいが、何でもいい
-
-
-	}
-
-
-
-}
