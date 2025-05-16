@@ -17,7 +17,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 cameraTranslate{ 0.0f,1.9f,-6.49f };
 	Vector3 camaraRotate{ 0.26f,0.0f,0.0f };
 
-	Sphere sphere = {};
+	Sphere sphere = {0.0f,0.0f,0.0f,1.0f};
 
 
 	// ライブラリの初期化
