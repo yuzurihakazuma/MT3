@@ -1,7 +1,7 @@
 #include <Novice.h>
 #include "Sphere.h"
 #include "Matrix4x4.h"
-#include "imgui.h"
+#include <imgui.h>
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
 
@@ -10,10 +10,10 @@ const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	
-	Vector3 cameraTranslate{}
+	Vector3 cameraTranslate{ 0.0f,1.9f,-6.49f };
+	Vector3 camaraRotate{ 0.26f,0.0f,0.0f };
 
-
-
+	Sphere sphere = {};
 
 
 	// ライブラリの初期化
@@ -36,6 +36,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 		
+#ifdef _DEBUG
+		ImGui::Begin("Window");
+		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
+		ImGui::DragFloat3("CameraRotate", &camaraRotate.x, 0.01f);
+		ImGui::DragFloat3("SphereCenter", &sphere.center.x ,0.01f);
+		ImGui::DragFloat("SphereRadius", &sphere.radius ,0.01f);
+		ImGui::End();
+#endif // _DEBUG
+
+
+
+
 		///
 		/// ↑更新処理ここまで
 		///
@@ -43,6 +55,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
+
+		//DrawSphere()
+
 
 		///
 		/// ↑描画処理ここまで
