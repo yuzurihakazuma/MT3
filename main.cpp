@@ -19,6 +19,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 camaraRotate{ 0.26f,0.0f,0.0f };
 	Vector3 cameraPos{ 0.0f,2.0f,10.0f };
 
+	
+
 
 
 	// ライブラリの初期化
