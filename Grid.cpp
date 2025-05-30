@@ -1,5 +1,6 @@
-#define _USE_MATH_DEFINES 
+#define NOMINMAX
 #include <algorithm> 
+#define _USE_MATH_DEFINES 
 #include "Grid.h"
 #include <cmath>
 #include <math.h>
@@ -59,7 +60,17 @@ void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewp
 }
 
 Vector3 Project(const Vector3& v1, const Vector3& v2) {
-	return Vector3();
+	float dot = v1.Dot(v2);            // v1‚Æv2‚Ì“àÏ
+	float lenSq = v2.Dot(v2);          // v2‚Ì’·‚³‚Ì2æ
+	if (lenSq == 0.0f) {
+		return Vector3{ 0.0f, 0.0f, 0.0f }; // v2‚ªƒ[ƒƒxƒNƒgƒ‹‚È‚çË‰e‚Í0
+	}
+	float scale = dot / lenSq;
+	return Vector3{
+		v2.x * scale,
+		v2.y * scale,
+		v2.z * scale
+	};
 }
 
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
