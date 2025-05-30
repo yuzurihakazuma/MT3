@@ -3,11 +3,11 @@
 #include "KamataEngine.h"
 
 struct Segment {
-	Vector3 start;  // ü•ª‚ÌŽn“_
-	Vector3 end;    // ü•ª‚ÌI“_
+	Vector3 start;  // ç·šåˆ†ã®å§‹ç‚¹
+	Vector3 end;    // ç·šåˆ†ã®çµ‚ç‚¹
 };
 
-// ƒOƒŠƒbƒh
+// ã‚°ãƒªãƒƒãƒ‰
 void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& Viewport);
 
 Vector3 Project(const Vector3& v1, const Vector3& v2);

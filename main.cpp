@@ -1,11 +1,14 @@
 #include <Novice.h>
 #include "Matrix4x4.h"
 #include "Grid.h"
+#include <imgui.h>
 
 using namespace MatrixMath;
 
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 
+const int kWindowWidth = 1280;
+const int kWindowHeight = 720;
 
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -53,6 +56,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
+#ifdef _DEBUG
+		ImGui::Begin("Window");
+		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
+		ImGui::DragFloat3("CameraRotate", &camaraRotate.x, 0.01f);
+		ImGui::End();
+#endif // _DEBUG
 
 
 
@@ -63,6 +72,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
+
+		DrawGrid(worldViewProjectionMatrix, viewportMatrix);
+
 
 		///
 		/// ↑描画処理ここまで

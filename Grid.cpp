@@ -11,35 +11,35 @@
 using namespace MatrixMath;
 
 void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewportMatrix) {
-	const float kGridHalfwidth = 2.0f; // ƒOƒŠƒbƒh‚Ì”¼•ª‚Ì•
-	const uint32_t kSubdivision = 10;  // •ªŠ„”
+	const float kGridHalfwidth = 2.0f; // ã‚°ãƒªãƒƒãƒ‰ã®åŠåˆ†ã®å¹…
+	const uint32_t kSubdivision = 10;  // åˆ†å‰²æ•°
 	const float kGridEvery =
-		(kGridHalfwidth * 2.0f) / float(kSubdivision); // ˆê‚Â•ª‚Ì’·‚³
+		(kGridHalfwidth * 2.0f) / float(kSubdivision); // ä¸€ã¤åˆ†ã®é•·ã•
 
-	// ‰œ‚©‚çè‘O‚Ö‚Ìü‚ğ‡X‚Éˆø‚¢‚Ä‚¢‚­
+	// å¥¥ã‹ã‚‰æ‰‹å‰ã¸ã®ç·šã‚’é †ã€…ã«å¼•ã„ã¦ã„ã
 	for (uint32_t xIndex = 0; xIndex <= kSubdivision; ++xIndex) {
 		float x = -kGridHalfwidth + kGridEvery * xIndex;
 
-		// ƒ[ƒ‹ƒhÀ•WŒn‚Ìx“_‚ÆI“_
+		// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã®æ”¯ç‚¹ã¨çµ‚ç‚¹
 		Vector3 start = { x, 0.0f, -kGridHalfwidth };
 		Vector3 end = { x, 0.0f, kGridHalfwidth };
 
-		// •ÏŠ·iƒ[ƒ‹ƒh¨ƒXƒNƒŠ[ƒ“j
+		// å¤‰æ›ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰â†’ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ï¼‰
 		Vector3 startScreen = Transform(start, worldViewProjectionMatrix);
 		startScreen = Transform(startScreen, viewportMatrix);
 
 		Vector3 endScreen = Transform(end, worldViewProjectionMatrix);
 		endScreen = Transform(endScreen, viewportMatrix);
 
-		// F‚ğŒˆ‚ß‚éiŒ´“_‚Ìü‚Í•A‚»‚êˆÈŠO‚Í”–‚¢ŠDFj
+		// è‰²ã‚’æ±ºã‚ã‚‹ï¼ˆåŸç‚¹ã®ç·šã¯é»’ã€ãã‚Œä»¥å¤–ã¯è–„ã„ç°è‰²ï¼‰
 		uint32_t color = (x == 0.0f) ? 0x000000FF : 0xAAAAAAFF;
 
-		// ü‚ğˆø‚­
+		// ç·šã‚’å¼•ã
 		Novice::DrawLine(int(startScreen.x), int(startScreen.y), int(endScreen.x),
 			int(endScreen.y), color);
 	}
 
-	// ¶‚©‚ç‰E‚Ö‚Ìü‚ğ‡X‚Éˆø‚¢‚Ä‚¢‚­
+	// å·¦ã‹ã‚‰å³ã¸ã®ç·šã‚’é †ã€…ã«å¼•ã„ã¦ã„ã
 	for (uint32_t zIndex = 0; zIndex <= kSubdivision; ++zIndex) {
 		float z = -kGridHalfwidth + kGridEvery * zIndex;
 
@@ -60,10 +60,10 @@ void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewp
 }
 
 Vector3 Project(const Vector3& v1, const Vector3& v2) {
-	float dot = v1.Dot(v2);            // v1‚Æv2‚Ì“àÏ
-	float lenSq = v2.Dot(v2);          // v2‚Ì’·‚³‚Ì2æ
+	float dot = v1.Dot(v2);            // v1ã¨v2ã®å†…ç©
+	float lenSq = v2.Dot(v2);          // v2ã®é•·ã•ã®2ä¹—
 	if (lenSq == 0.0f) {
-		return Vector3{ 0.0f, 0.0f, 0.0f }; // v2‚ªƒ[ƒƒxƒNƒgƒ‹‚È‚çË‰e‚Í0
+		return Vector3{ 0.0f, 0.0f, 0.0f }; // v2ãŒã‚¼ãƒ­ãƒ™ã‚¯ãƒˆãƒ«ãªã‚‰å°„å½±ã¯0
 	}
 	float scale = dot / lenSq;
 	return Vector3{
@@ -79,12 +79,12 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
 
 	float abLengthSq = ab.Dot(ab);
 	if (abLengthSq == 0.0f) {
-		// ü•ª‚ª1“_istart‚Æend‚ª“¯‚¶j‚È‚çstart‚ğ•Ô‚·
+		// ç·šåˆ†ãŒ1ç‚¹ï¼ˆstartã¨endãŒåŒã˜ï¼‰ãªã‚‰startã‚’è¿”ã™
 		return segment.start;
 	}
 
 	float t = ap.Dot(ab) / abLengthSq;
-	t = std::max(0.0f, std::min(1.0f, t)); // ü•ª‚Ì”ÍˆÍ‚ÉƒNƒ‰ƒ“ƒv
+	t = std::max(0.0f, std::min(1.0f, t)); // ç·šåˆ†ã®ç¯„å›²ã«ã‚¯ãƒ©ãƒ³ãƒ—
 
 	return segment.start + ab * t;
 }

@@ -6,10 +6,10 @@
 
 using namespace MatrixMath;
 
-// 4x4s—ñ‚ÌÏ
+// 4x4è¡Œåˆ—ã®ç©
 Matrix4x4 MatrixMath::Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 result;
-
+	
 	for (int row = 0; row < 4; ++row) {
 		for (int col = 0; col < 4; ++col) {
 			result.m[row][col] = 0;
@@ -25,46 +25,46 @@ Matrix4x4 MatrixMath::Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 
 
 
-// •½sˆÚ“®s—ñ
+// å¹³è¡Œç§»å‹•è¡Œåˆ—
 Matrix4x4 MatrixMath::MakeTranslate(const Vector3& translate) {
 
 	Matrix4x4 result = {};
-	// ’PˆÊs—ñ‚Ìì¬
+	// å˜ä½è¡Œåˆ—ã®ä½œæˆ
 	result.m[0][0] = 1.0f;
 	result.m[1][1] = 1.0f;
 	result.m[2][2] = 1.0f;
 	result.m[3][3] = 1.0f;
-	// •½sˆÚ“®‚Ì¬•ª
+	// å¹³è¡Œç§»å‹•ã®æˆåˆ†
 	result.m[3][0] = translate.x;
 	result.m[3][1] = translate.y;
 	result.m[3][2] = translate.z;
 
-	return result;// Š®¬‚µ‚½•½sˆÚ“®‚ğ•Ô‚·
+	return result;// å®Œæˆã—ãŸå¹³è¡Œç§»å‹•ã‚’è¿”ã™
 }
-// Šg‘åk¬s—ñ
+// æ‹¡å¤§ç¸®å°è¡Œåˆ—
 Matrix4x4 MatrixMath::MakeScale(const Vector3& scale) {}
 
-#pragma region ‰ñ“]s—ñ
+#pragma region å›è»¢è¡Œåˆ—
 
-//X²‚Ì‰ñ“]s—ñ
+//Xè»¸ã®å›è»¢è¡Œåˆ—
 Matrix4x4 MatrixMath::MakeRotateX(float radian) {}
-// Y²‚Ì‰ñ“]s—ñ
+// Yè»¸ã®å›è»¢è¡Œåˆ—
 Matrix4x4 MatrixMath::MakeRotateY(float radian) {}
-// Z²‚Ì‰ñ“]s—ñ
+// Zè»¸ã®å›è»¢è¡Œåˆ—
 Matrix4x4 MatrixMath::MakeRotateZ(float radian) {}
 #pragma endregion
 
-// 3ŸŒ³ƒAƒtƒBƒ“•ÏŠ·s—ñ
+// 3æ¬¡å…ƒã‚¢ãƒ•ã‚£ãƒ³å¤‰æ›è¡Œåˆ—
 Matrix4x4 MatrixMath::MakeAffine(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {}
 
-// 4x4s—ñ‚Ì‹ts—ñ
+// 4x4è¡Œåˆ—ã®é€†è¡Œåˆ—
 Matrix4x4 MatrixMath::Inverse(const Matrix4x4& m) {}
 
 
-// À•W•ÏŠ·
+// åº§æ¨™å¤‰æ›
 Vector3 MatrixMath::Transform(const Vector3& vector, const Matrix4x4& matrix) {}
 
-// ³Ë‰es—ñ
+// æ­£å°„å½±è¡Œåˆ—
 Matrix4x4 MatrixMath::Orthographic(float left, float top, float right, float bottom, float nearClip, float farClip) {
 
 	Matrix4x4 result = {};
@@ -80,15 +80,15 @@ Matrix4x4 MatrixMath::Orthographic(float left, float top, float right, float bot
 
 	return result;
 }
-// “§‹“Š‰es—ñ
+// é€è¦–æŠ•å½±è¡Œåˆ—
 Matrix4x4 MatrixMath::PerspectiveFov(float fovY, float aspectRatio, float nearClip, float farClip) {
 
 	Matrix4x4 result = {};
 
-	// ƒRƒ^ƒ“ƒWƒFƒ“ƒg(fovY/2)
+	// ã‚³ã‚¿ãƒ³ã‚¸ã‚§ãƒ³ãƒˆ(fovY/2)
 	float f = 1.0f / std::tan(fovY / 2.0f);
 
-	// “§‹“Š‰es—ñ‚ÌŠe—v‘fİ’è
+	// é€è¦–æŠ•å½±è¡Œåˆ—ã®å„è¦ç´ è¨­å®š
 	result.m[0][0] = f / aspectRatio;
 	result.m[1][1] = f;
 	result.m[2][2] = farClip / (farClip - nearClip);
@@ -97,7 +97,7 @@ Matrix4x4 MatrixMath::PerspectiveFov(float fovY, float aspectRatio, float nearCl
 
 	return result;
 }
-// ƒrƒ…[ƒ|[ƒg•ÏŠ·s—ñ
+// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆå¤‰æ›è¡Œåˆ—
 Matrix4x4 MatrixMath::Viewport(float left, float top, float width, float height, float minDepth, float maxDepth) {
 
 	Matrix4x4 result = {};
