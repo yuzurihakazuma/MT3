@@ -44,14 +44,14 @@ void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4
 
 
 			// a,b,cをScreen座標系まで変換
-			 
+
 			Vector3 screenA = Transform(Transform(a, viewProjection), viewport);
 			Vector3 screenB = Transform(Transform(b, viewProjection), viewport);
 			Vector3 screenC = Transform(Transform(c, viewProjection), viewport);
 
-			 
-			 
-			
+
+
+
 			// ab,bcで線を引く
 			Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenB.x), int(screenB.y), color);
 			Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenC.x), int(screenC.y), color);
@@ -65,48 +65,51 @@ void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4
 
 
 
-void DrawGrid(const Matrix4x4& PerspectiveFov, const Matrix4x4& Viewport) {
-
-	const float kGridHalfWidth = 2.0f; // Gridの半分の幅
+void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewportMatrix) {
+	const float kGridHalfwidth = 2.0f; // グリッドの半分の幅
 	const uint32_t kSubdivision = 10;  // 分割数
-	const float kGridEvery = (kGridHalfWidth * 2.0f) / float(kSubdivision); // 一つ分の長さ
+	const float kGridEvery =
+		(kGridHalfwidth * 2.0f) / float(kSubdivision); // 一つ分の長さ
 
-	// 奥から手前への線を隅々に引いていく
-	for (uint32_t xIndex = 0; xIndex < kSubdivision; ++xIndex) {
-		// 上の情報を使ってワールド座標系上の始点と終点を求める
-		float x = -kGridHalfWidth + xIndex * kGridEvery;
+	// 奥から手前への線を順々に引いていく
+	for (uint32_t xIndex = 0; xIndex <= kSubdivision; ++xIndex) {
+		float x = -kGridHalfwidth + kGridEvery * xIndex;
 
-		// Z方向に奥から手前
-		Vector3 start = { x,0.0f,-kGridHalfWidth };
-		Vector3 end = { x,0.0f,kGridHalfWidth };
+		// ワールド座標系の支点と終点
+		Vector3 start = { x, 0.0f, -kGridHalfwidth };
+		Vector3 end = { x, 0.0f, kGridHalfwidth };
 
-		// スクリーン座標系の変換をかける
-		Vector3 startScreen = Transform(Transform(start, PerspectiveFov), Viewport);
-		Vector3 endScreen = Transform(Transform(end, PerspectiveFov), Viewport);
+		// 変換（ワールド→スクリーン）
+		Vector3 startScreen = Transform(start, worldViewProjectionMatrix);
+		startScreen = Transform(startScreen, viewportMatrix);
 
-		// 変換した座標を使って表示。色は薄い灰色(0xAAAAAAFF),原点は黒ぐらいがいいが、何でもいい
-		uint32_t color = (x == 0) ? 0x000000FFu : 0xAAAAAAFFu; //原点は黒、それ以外は灰色
+		Vector3 endScreen = Transform(end, worldViewProjectionMatrix);
+		endScreen = Transform(endScreen, viewportMatrix);
 
-		Novice::DrawLine(int(startScreen.x), int(startScreen.y),
-			int(endScreen.x), int(endScreen.y), color);
+		// 色を決める（原点の線は黒、それ以外は薄い灰色）
+		uint32_t color = (x == 0.0f) ? 0x000000FF : 0xAAAAAAFF;
+
+		// 線を引く
+		Novice::DrawLine(int(startScreen.x), int(startScreen.y), int(endScreen.x),
+			int(endScreen.y), color);
 	}
 
-	// 左から右も同じように順々に引いていく
+	// 左から右への線を順々に引いていく
 	for (uint32_t zIndex = 0; zIndex <= kSubdivision; ++zIndex) {
-		float z = -kGridHalfWidth + zIndex * kGridEvery;
+		float z = -kGridHalfwidth + kGridEvery * zIndex;
 
-		// 左から右方向に引くグリッド線の始点と終点（XZ平面）
-		Vector3 start = { -kGridHalfWidth, 0.0f, z };
-		Vector3 end = { kGridHalfWidth, 0.0f, z };
+		Vector3 start = { -kGridHalfwidth, 0.0f, z };
+		Vector3 end = { kGridHalfwidth, 0.0f, z };
 
-		// 変換（ワールド座標 → クリップ座標 → スクリーン座標）
-		Vector3 startScreen = Transform(Transform(start, PerspectiveFov), Viewport);
-		Vector3 endScreen = Transform(Transform(end, PerspectiveFov), Viewport);
+		Vector3 startScreen = Transform(start, worldViewProjectionMatrix);
+		startScreen = Transform(startScreen, viewportMatrix);
 
-		uint32_t color = (z == 0.0f) ? 0x000000FFu : 0xAAAAAAFFu;
-		Novice::DrawLine(int(startScreen.x), int(startScreen.y),
-			int(endScreen.x), int(endScreen.y), color);
+		Vector3 endScreen = Transform(end, worldViewProjectionMatrix);
+		endScreen = Transform(endScreen, viewportMatrix);
+
+		uint32_t color = (z == 0.0f) ? 0x000000FF : 0xAAAAAAFF;
+
+		Novice::DrawLine(int(startScreen.x), int(startScreen.y), int(endScreen.x),
+			int(endScreen.y), color);
 	}
-
-
 }
