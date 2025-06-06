@@ -7,6 +7,11 @@ struct Segment {
 	Vector3 end;    // 線分の終点
 };
 
+struct Sphere {
+	Vector3 center; //中心点
+	float radius; // 半径
+};
+
 // 球
 void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t coler);
 
