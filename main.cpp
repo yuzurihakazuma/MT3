@@ -19,8 +19,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 camaraRotate{ 0.26f,0.0f,0.0f };
 	Vector3 cameraPos{ 0.0f,2.0f,10.0f };
 
-	
-
+	Segment segmet{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
+	Vector3 point{ -1.5f,0.6f,0.6f };
 
 
 	// ライブラリの初期化
@@ -55,6 +55,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		// ビューポート行列
 		Matrix4x4 viewportMatrix = Viewport(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
+
+		
+
 
 
 
