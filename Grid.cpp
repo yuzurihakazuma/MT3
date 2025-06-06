@@ -10,6 +10,60 @@
 
 using namespace MatrixMath;
 
+void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t color) {
+
+	const uint32_t kSubdivsion = 16; // 分割数
+	const float kLonEvery = 2.0f * float(M_PI) / float(kSubdivsion); // 経度分割一つ分の角度
+	const float kLatEvery = float(M_PI) / float(kSubdivsion); // 緯度分割一つ分の角度
+	// 緯度の方向に分割 -π/2-π/2
+	for (uint32_t latIndex = 0; latIndex < kSubdivsion; ++latIndex) {
+		float lat = -float(M_PI) / 2.0f + latIndex * kLatEvery; // 現在の緯度
+		// 経度の方向に分割 0-2π
+		for (uint32_t lonIndex = 0; lonIndex < kSubdivsion; ++lonIndex) {
+			float lon = lonIndex * kLonEvery;// 現在の経度
+			// world座標系でのa,b,cを求める
+			Vector3 a = {
+				sphere.center.x + sphere.radius * std::cos(lat) * std::cos(lon),
+				sphere.center.y + sphere.radius * std::sin(lat),
+				sphere.center.z + sphere.radius * std::cos(lat) * std::sin(lon),
+			};
+
+			float nextLat = lat + kLatEvery;
+			float nextLon = lon + kLonEvery;
+
+			Vector3 b = {
+				sphere.center.x + sphere.radius * cosf(nextLat) * cosf(lon),
+				sphere.center.y + sphere.radius * sinf(nextLat),
+				sphere.center.z + sphere.radius * cosf(nextLat) * sinf(lon)
+			};
+
+			Vector3 c = {
+			   sphere.center.x + sphere.radius * cosf(lat) * cosf(nextLon),
+			   sphere.center.y + sphere.radius * sinf(lat),
+			   sphere.center.z + sphere.radius * cosf(lat) * sinf(nextLon)
+			};
+
+
+			// a,b,cをScreen座標系まで変換
+
+			Vector3 screenA = Transform(Transform(a, viewProjection), viewport);
+			Vector3 screenB = Transform(Transform(b, viewProjection), viewport);
+			Vector3 screenC = Transform(Transform(c, viewProjection), viewport);
+
+
+
+
+			// ab,bcで線を引く
+			Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenB.x), int(screenB.y), color);
+			Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenC.x), int(screenC.y), color);
+
+		}
+
+	}
+
+
+}
+
 void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewportMatrix) {
 	const float kGridHalfwidth = 2.0f; // グリッドの半分の幅
 	const uint32_t kSubdivision = 10;  // 分割数
