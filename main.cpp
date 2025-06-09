@@ -17,14 +17,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	Vector3 cameraTranslate{ 0.0f,1.9f,-6.49f };
 	Vector3 camaraRotate{ 0.26f,0.0f,0.0f };
-	Vector3 cameraPos{ 0.0f,2.0f,10.0f };
+	Vector3 cameraPos{ 0.0f,2.0f,-10.0f };
 
 	Segment segmet{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
 	// pointを養分に射影したベクトル。今回は正しく計算できているかを確認するためだけに使う
 	Vector3 point{ -1.5f,0.6f,0.6f };
-	// この値が線分上の点を表す
-	Vector3 closestPoint = ClosestPoint(point, segmet);
-
+	
 	
 
 	// ライブラリの初期化
@@ -47,6 +45,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 		
+		
+
+		// この値が線分上の点を表す
+		Vector3 closestPoint = ClosestPoint(point, segmet);
+
 			// ワールド行列
 		Matrix4x4 cameraMatrix = MakeAffine({ 1.0f,1.0f,1.0f }, camaraRotate, cameraTranslate);
 		// ビュー行列はカメラ行列の逆行列
@@ -61,9 +64,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Sphere pointSphere{ point,0.01f };// 1cmの球描画
 		Sphere closestPointSphere{ closestPoint,0.01f };
 
-		DrawSphere(pointSphere, viewportMatrix, viewMatrix, RED);
-		DrawSphere(closestPointSphere, viewportMatrix, viewMatrix, BLACK);
+		
+		Vector3 start = Transform(Transform(segmet.start, viewProjectionMatrix), viewportMatrix);
+		//start = Transform(start, viewportMatrix);
 
+		Vector3 end = Transform(Transform(Add(segmet.start, segmet.end), viewportMatrix), viewportMatrix);
+		//end = Transform(end, viewportMatrix);
 
 
 
@@ -84,12 +90,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		Vector3 start = Transform(Transform(segmet.start, viewProjectionMatrix), viewportMatrix);
-		//start = Transform(start, viewportMatrix);
-
-		Vector3 end = Transform(Transform(segmet.end, viewProjectionMatrix),viewportMatrix);
-		//end = Transform(end, viewportMatrix);
-
+		
 		DrawGrid(viewProjectionMatrix, viewportMatrix);
 
 		Novice::DrawLine(
@@ -97,6 +98,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			static_cast<int>(end.x), static_cast<int>(end.y),
 			0xFFFFFFFF
 		);
+		DrawSphere(pointSphere, viewportMatrix, viewMatrix, RED);
+		DrawSphere(closestPointSphere, viewportMatrix, viewMatrix, BLACK);
 
 		
 
