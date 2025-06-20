@@ -6,6 +6,17 @@
 
 using namespace MatrixMath;
 
+Vector3 MatrixMath::Normalize(const Vector3& v) {
+
+	Vector3 result = {};
+
+	result.x = v.x / Length(v);
+	result.y = v.y / Length(v);
+	result.z = v.z / Length(v);
+
+	return result;
+}
+
 Vector3 MatrixMath::MultiplyScalar(float scalar, const Vector3& v) {
 
 	Vector3 result = {};

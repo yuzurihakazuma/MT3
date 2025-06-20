@@ -6,6 +6,9 @@
 
 namespace MatrixMath {
 
+	// 正規化
+	Vector3 Normalize(const Vector3& v);
+
 	// スカラー倍
 	Vector3 MultiplyScalar(float scalar, const Vector3& v);
 
