@@ -5,7 +5,14 @@
 #include <cmath>
 
 using namespace MatrixMath;
+// 長さ
+float MatrixMath::Length(const Vector3& v) {
 
+	float result = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+
+	return result;
+}
+// 正規化
 Vector3 MatrixMath::Normalize(const Vector3& v) {
 
 	Vector3 result = {};
@@ -16,7 +23,7 @@ Vector3 MatrixMath::Normalize(const Vector3& v) {
 
 	return result;
 }
-
+//スカラー倍
 Vector3 MatrixMath::MultiplyScalar(float scalar, const Vector3& v) {
 
 	Vector3 result = {};

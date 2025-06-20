@@ -6,6 +6,10 @@
 
 namespace MatrixMath {
 
+	// 長さ(ノルム)
+	float Length(const Vector3& v);
+	
+	
 	// 正規化
 	Vector3 Normalize(const Vector3& v);
 

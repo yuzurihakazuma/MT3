@@ -118,7 +118,7 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 
 	Vector3 center = MultiplyScalar(plane.distance, plane.normal);// 1
 	Vector3 perpendiculars[4];
-	perpendiculars[0]=
+	perpendiculars[0]=Normalize()
 	perpendiculars[]
 	perpendiculars[]
 	perpendiculars[]
