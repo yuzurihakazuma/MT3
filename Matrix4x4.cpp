@@ -6,6 +6,17 @@
 
 using namespace MatrixMath;
 
+Vector3 MatrixMath::MultiplyScalar(float scalar, const Vector3& v) {
+
+	Vector3 result = {};
+
+	result.x = scalar * v.x;
+	result.y = scalar * v.y;
+	result.z = scalar * v.z;
+
+	return result;
+}
+
 // 4x4行列の積
 Matrix4x4 MatrixMath::Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 result;

@@ -116,8 +116,11 @@ void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewp
 
 void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewportMatrix, uint32_t color) {
 
-	Vector3 center = Multiply(plane.distance, plane.normal);// 1
-
-
+	Vector3 center = MultiplyScalar(plane.distance, plane.normal);// 1
+	Vector3 perpendiculars[4];
+	perpendiculars[0]=
+	perpendiculars[]
+	perpendiculars[]
+	perpendiculars[]
 
 }

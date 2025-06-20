@@ -6,6 +6,8 @@
 
 namespace MatrixMath {
 
+	// スカラー倍
+	Vector3 MultiplyScalar(float scalar, const Vector3& v);
 
 	// 行列の積
 	Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
