@@ -127,9 +127,16 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 
 	Vector3 center = MultiplyScalar(plane.distance, plane.normal);// 1
 	Vector3 perpendiculars[4];
-	perpendiculars[0] = Normalize(Perpendicular(plane.normal));
-	perpendiculars[1] = { -perpendiculars[0].x,-perpendiculars[0].y,-perpendiculars[0].z };
-	perpendiculars[2]=
-	perpendiculars[]
+	perpendiculars[0] = Normalize(Perpendicular(plane.normal)); // 2
+	perpendiculars[1] = { -perpendiculars[0].x,-perpendiculars[0].y,-perpendiculars[0].z }; // 3
+	perpendiculars[2] = Cross(plane.normal, perpendiculars[0]); // 4
+	perpendiculars[3] = { -perpendiculars[2].x,-perpendiculars[2].y,perpendiculars[2].z }; // 5
+	//6
+	Vector3 points[4];
+	for (int32_t index = 0; index < 4; index++) {
+		Vector3 extend = MultiplyScalar(2.0f, perpendiculars[index]);
+		Vector3 point=
+
+	}
 
 }

@@ -6,6 +6,10 @@
 
 namespace MatrixMath {
 
+	// 外積
+	Vector3 Cross(const Vector3& a, const Vector3& b);
+	
+	
 	// 長さ(ノルム)
 	float Length(const Vector3& v);
 	
