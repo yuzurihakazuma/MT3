@@ -7,18 +7,18 @@
 #include <Novice.h>
 
 using namespace MatrixMath;
+using namespace MathSphere;
 
 
-Vector3 Perpendicular(const Vector3& normal) {
+Vector3 MathSphere::Perpendicular(const Vector3& vector) {
 	// 法線の絶対値の小さい成分を避けて直交ベクトルを作成
-	if (fabs(normal.x) < fabs(normal.y)) {
-		return Vector3(0, -normal.z, normal.y);
-	} else {
-		return Vector3(-normal.z, 0, normal.x);
+	if (vector.x != 0.0f || vector.y != 0.0f) {
+		return{ -vector.y,vector.x,0.0f };
 	}
+	return { 0.0f,-vector.z,vector.y };
 }
-
-void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t color) {
+// 球
+void MathSphere::DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t color) {
 
 	const uint32_t kSubdivsion = 16; // 分割数
 	const float kLonEvery = 2.0f * float(M_PI) / float(kSubdivsion); // 経度分割一つ分の角度
@@ -73,8 +73,8 @@ void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4
 }
 
 
-
-void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewportMatrix) {
+// グリット
+void MathSphere::DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewportMatrix) {
 	const float kGridHalfwidth = 2.0f; // グリッドの半分の幅
 	const uint32_t kSubdivision = 10;  // 分割数
 	const float kGridEvery =
@@ -123,20 +123,48 @@ void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewp
 	}
 }
 
-void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewportMatrix, uint32_t color) {
 
-	Vector3 center = MultiplyScalar(plane.distance, plane.normal);// 1
-	Vector3 perpendiculars[4];
-	perpendiculars[0] = Normalize(Perpendicular(plane.normal)); // 2
-	perpendiculars[1] = { -perpendiculars[0].x,-perpendiculars[0].y,-perpendiculars[0].z }; // 3
-	perpendiculars[2] = Cross(plane.normal, perpendiculars[0]); // 4
-	perpendiculars[3] = { -perpendiculars[2].x,-perpendiculars[2].y,perpendiculars[2].z }; // 5
-	//6
-	Vector3 points[4];
-	for (int32_t index = 0; index < 4; index++) {
-		Vector3 extend = MultiplyScalar(2.0f, perpendiculars[index]);
-		Vector3 point=
+void MathSphere::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
+	Vector3 center = MultiplyScalar(plane.distance, plane.normal);
 
+	// 平面上の直交ベクトルを2つ生成
+	Vector3 axisX = Normalize(Perpendicular(plane.normal));
+	Vector3 axisY = Normalize(Cross(plane.normal, axisX));
+
+	// 4頂点を作成（±方向に拡張）
+	float size = 2.0f; // 平面の可視範囲（任意）
+	Vector3 corners[4];
+	corners[0] = Add(center, Add(MultiplyScalar(size, axisX), MultiplyScalar(size, axisY)));  // +X +Y
+	corners[1] = Add(center, Add(MultiplyScalar(-size, axisX), MultiplyScalar(size, axisY))); // -X +Y
+	corners[2] = Add(center, Add(MultiplyScalar(-size, axisX), MultiplyScalar(-size, axisY))); // -X -Y
+	corners[3] = Add(center, Add(MultiplyScalar(size, axisX), MultiplyScalar(-size, axisY))); // +X -Y
+
+	// 変換（ViewProjection → Viewport）
+	for (int i = 0; i < 4; i++) {
+		corners[i] = Transform(Transform(corners[i], viewProjectionMatrix), viewportMatrix);
 	}
 
+	// 線を描画（四角形として接続）
+	for (int i = 0; i < 4; i++) {
+		int next = (i + 1) % 4;
+		Novice::DrawLine(
+			static_cast<int>(corners[i].x),
+			static_cast<int>(corners[i].y),
+			static_cast<int>(corners[next].x),
+			static_cast<int>(corners[next].y),
+			color
+		);
+	}
 }
+
+bool MathSphere::IsCollision(const Sphere& sphere, const Plane& plane) {
+	// 球の中心と平面の距離 = dot(plane.normal, sphere.center) - plane.distance
+	float distance = Dot(plane.normal, sphere.center) - plane.distance;
+
+	// 絶対値を取る（裏側も考慮）
+	distance = std::fabs(distance);
+
+	// 距離が半径以下なら衝突
+	return distance <= sphere.radius;
+}
+

@@ -4,6 +4,7 @@
 #include <imgui.h>
 
 using namespace MatrixMath;
+using namespace MathSphere;
 
 const char kWindowTitle[] = "LE2C_28_ユズリハ_カズマ";
 

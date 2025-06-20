@@ -8,13 +8,13 @@ struct Vector3 {
 };
 
 struct Sphere {
-	Vector3 center; //’†S“_
-	float radius; // ”¼Œa
+	Vector3 center; //ä¸­å¿ƒç‚¹
+	float radius; // åŠå¾„
 };
 
 struct Plane {
-	Vector3 normal; // •½–Ê‚Ì–@üƒxƒNƒgƒ‹(’PˆÊƒxƒNƒgƒ‹)
-	float distance; // Œ´“_‚©‚ç•½–Ê‚Ü‚Å‚Ì‹—ibj
+	Vector3 normal; // å¹³é¢ã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«(å˜ä½ãƒ™ã‚¯ãƒˆãƒ«)
+	float distance; // åŸç‚¹ã‹ã‚‰å¹³é¢ã¾ã§ã®è·ï¼ˆbï¼‰
 };
 
 struct Matrix4x4 {
