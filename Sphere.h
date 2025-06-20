@@ -6,7 +6,7 @@
 
 
 
-
+Vector3 Perpendicular(const Vector3& normal);
 
 // 球
 void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t coler);

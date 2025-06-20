@@ -9,6 +9,15 @@
 using namespace MatrixMath;
 
 
+Vector3 Perpendicular(const Vector3& normal) {
+	// 法線の絶対値の小さい成分を避けて直交ベクトルを作成
+	if (fabs(normal.x) < fabs(normal.y)) {
+		return Vector3(0, -normal.z, normal.y);
+	} else {
+		return Vector3(-normal.z, 0, normal.x);
+	}
+}
+
 void DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t color) {
 
 	const uint32_t kSubdivsion = 16; // 分割数
@@ -118,9 +127,9 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 
 	Vector3 center = MultiplyScalar(plane.distance, plane.normal);// 1
 	Vector3 perpendiculars[4];
-	perpendiculars[0]=Normalize()
-	perpendiculars[]
-	perpendiculars[]
+	perpendiculars[0] = Normalize(Perpendicular(plane.normal));
+	perpendiculars[1] = { -perpendiculars[0].x,-perpendiculars[0].y,-perpendiculars[0].z };
+	perpendiculars[2]=
 	perpendiculars[]
 
 }
