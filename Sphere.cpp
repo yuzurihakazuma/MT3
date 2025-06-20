@@ -113,3 +113,11 @@ void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewp
 			int(endScreen.y), color);
 	}
 }
+
+void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewportMatrix, uint32_t color) {
+
+	Vector3 center = Multiply(plane.distance, plane.normal);// 1
+
+
+
+}
