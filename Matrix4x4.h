@@ -11,7 +11,8 @@ namespace MatrixMath {
 	// 減算
 	Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 	
-	
+	// 内積
+	float Dot(const Vector3& v1, const Vector3& v2);
 	// 外積
 	Vector3 Cross(const Vector3& a, const Vector3& b);
 	

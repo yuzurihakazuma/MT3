@@ -28,7 +28,15 @@ Vector3 MatrixMath::Subtract(const Vector3& v1, const Vector3& v2) {
 
 	return result;
 }
+// 内積
+float MatrixMath::Dot(const Vector3& v1, const Vector3& v2) {
 
+	float result = (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
+
+
+	return result;
+
+}
 // 外積
 Vector3 MatrixMath::Cross(const Vector3& a, const Vector3& b) {
 	return Vector3(

@@ -10,6 +10,7 @@ struct Vector3 {
 struct Sphere {
 	Vector3 center; //中心点
 	float radius; // 半径
+	int color;
 };
 
 struct Plane {
