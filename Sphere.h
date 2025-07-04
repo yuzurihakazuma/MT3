@@ -2,7 +2,10 @@
 #include "Matrix4x4.h"
 #include "Vector3.h"
 #include "KamataEngine.h"
-
+struct Segment {
+    Vector3 start; // 線分の始点
+    Vector3 end;   // 線分の終点
+};
 
 namespace MathSphere{
 
@@ -17,7 +20,7 @@ void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& Viewp
 // 平面
 void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
 
-//衝突判定
-bool IsCollision(const Sphere& sphere, const Plane& plane);
+// 線分と平面の当たり判定
+bool IsCollision(const Segment& segment, const Plane& plane);
 
 }

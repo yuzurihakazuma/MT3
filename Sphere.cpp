@@ -141,14 +141,12 @@ void MathSphere::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMa
 		);
 	}
 }
-bool MathSphere::IsCollision(const Sphere& sphere, const Plane& plane) {
-	// 球の中心と平面の距離 = dot(plane.normal, sphere.center) - plane.distance
-	float distance = Dot(plane.normal, sphere.center) - plane.distance;
-
-	// 絶対値を取る（裏側も考慮）
-	distance = std::fabs(distance);
-
-	// 距離が半径以下なら衝突
-	return distance <= sphere.radius;
+// 線分と平面の当たり判定
+bool IsCollision(const Segment& segment, const Plane& plane) {
+	// 始点と終点が平面のどちら側にあるかを判定
+	float d1 = Dot(segment.start, plane.normal) - plane.distance;
+	float d2 = Dot(segment.end, plane.normal) - plane.distance;
+	// 片方が正、片方が負なら交差
+	return (d1 * d2) <= 0.0f;
 }
 
