@@ -127,8 +127,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
-		DrawSphere(spherePlayer, worldViewProjectionMatrix, viewportMatrix, color);
-
+		// Segment描画
+		Vector3 screenStart = Transform(Transform(segment.start, worldViewProjectionMatrix), viewportMatrix);
+		Vector3 screenEnd = Transform(Transform(segment.end, worldViewProjectionMatrix), viewportMatrix);
+		Novice::DrawLine(
+			int(screenStart.x), int(screenStart.y),
+			int(screenEnd.x), int(screenEnd.y),
+			color
+		);
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix,-0.6f);
 
 		DrawPlane(plane, viewProjectionMatrix, viewportMatrix, WHITE);

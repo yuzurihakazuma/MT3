@@ -107,6 +107,11 @@ void MathSphere::DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matr
 	}
 }
 
+//void MathSphere::DrawSegment(const Segment& seg, const Matrix4x4& vp, const Matrix4x4& viewport, uint32_t color) {
+//	Vector2 a = Project(seg.origin, vp, viewport);
+//	Vector2 b = Project(Add(seg.origin, seg.diff), vp, viewport);
+//	Novice::DrawLine((int)a.x, (int)a.y, (int)b.x, (int)b.y, color);
+//}
 
 void MathSphere::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
 
@@ -141,12 +146,16 @@ void MathSphere::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMa
 		);
 	}
 }
-// 線分と平面の当たり判定
-bool IsCollision(const Segment& segment, const Plane& plane) {
-	// 始点と終点が平面のどちら側にあるかを判定
-	float d1 = Dot(segment.start, plane.normal) - plane.distance;
-	float d2 = Dot(segment.end, plane.normal) - plane.distance;
-	// 片方が正、片方が負なら交差
-	return (d1 * d2) <= 0.0f;
+// SegmentとPlaneの交差判定
+bool MathSphere::IsCollision(const Segment& segment, const Plane& plane) {
+	Vector3 startToPlane = segment.start;
+	Vector3 endToPlane = segment.end;
+
+	// 各点の平面との距離を求める
+	float d1 = Dot(plane.normal, startToPlane) - plane.distance;
+	float d2 = Dot(plane.normal, endToPlane) - plane.distance;
+
+	// どちらかが正、どちらかが負なら交差している
+	return d1 * d2 <= 0.0f;
 }
 

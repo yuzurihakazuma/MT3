@@ -6,6 +6,11 @@ struct Vector3 {
 	float y;
 	float z;
 };
+struct Vector2 {
+
+	float x;
+	float y;
+};
 
 struct Sphere {
 	Vector3 center; //中心点
@@ -20,4 +25,8 @@ struct Plane {
 
 struct Matrix4x4 {
 	float m[4][4];
+};
+struct Segment {
+	Vector3 start; // 線分の始点
+	Vector3 end;   // 線分の終点
 };
