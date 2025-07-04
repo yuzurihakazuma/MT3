@@ -73,90 +73,74 @@ void MathSphere::DrawSphere(const Sphere& sphere, Matrix4x4& viewProjection, con
 }
 
 
-// グリット
-void MathSphere::DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewportMatrix) {
-	const float kGridHalfwidth = 2.0f; // グリッドの半分の幅
-	const uint32_t kSubdivision = 10;  // 分割数
-	const float kGridEvery =
-		(kGridHalfwidth * 2.0f) / float(kSubdivision); // 一つ分の長さ
+void MathSphere::DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& viewportMatrix, float yOffset) {
+	const float kGridHalfwidth = 2.0f;
+	const uint32_t kSubdivision = 10;
+	const float kGridEvery = (kGridHalfwidth * 2.0f) / float(kSubdivision);
 
-	// 奥から手前への線を順々に引いていく
+	// Z軸方向のグリッド
 	for (uint32_t xIndex = 0; xIndex <= kSubdivision; ++xIndex) {
 		float x = -kGridHalfwidth + kGridEvery * xIndex;
 
-		// ワールド座標系の支点と終点
-		Vector3 start = { x, 0.0f, -kGridHalfwidth };
-		Vector3 end = { x, 0.0f, kGridHalfwidth };
+		Vector3 start = { x, yOffset, -kGridHalfwidth };
+		Vector3 end = { x, yOffset, kGridHalfwidth };
 
-		// 変換（ワールド→スクリーン）
-		Vector3 startScreen = Transform(start, worldViewProjectionMatrix);
-		startScreen = Transform(startScreen, viewportMatrix);
+		Vector3 startScreen = Transform(Transform(start, worldViewProjectionMatrix), viewportMatrix);
+		Vector3 endScreen = Transform(Transform(end, worldViewProjectionMatrix), viewportMatrix);
 
-		Vector3 endScreen = Transform(end, worldViewProjectionMatrix);
-		endScreen = Transform(endScreen, viewportMatrix);
-
-		// 色を決める（原点の線は黒、それ以外は薄い灰色）
 		uint32_t color = (x == 0.0f) ? 0x000000FF : 0xAAAAAAFF;
-
-		// 線を引く
-		Novice::DrawLine(int(startScreen.x), int(startScreen.y), int(endScreen.x),
-			int(endScreen.y), color);
+		Novice::DrawLine(int(startScreen.x), int(startScreen.y), int(endScreen.x), int(endScreen.y), color);
 	}
 
-	// 左から右への線を順々に引いていく
+	// X軸方向のグリッド
 	for (uint32_t zIndex = 0; zIndex <= kSubdivision; ++zIndex) {
 		float z = -kGridHalfwidth + kGridEvery * zIndex;
 
-		Vector3 start = { -kGridHalfwidth, 0.0f, z };
-		Vector3 end = { kGridHalfwidth, 0.0f, z };
+		Vector3 start = { -kGridHalfwidth, yOffset, z };
+		Vector3 end = { kGridHalfwidth, yOffset, z };
 
-		Vector3 startScreen = Transform(start, worldViewProjectionMatrix);
-		startScreen = Transform(startScreen, viewportMatrix);
-
-		Vector3 endScreen = Transform(end, worldViewProjectionMatrix);
-		endScreen = Transform(endScreen, viewportMatrix);
+		Vector3 startScreen = Transform(Transform(start, worldViewProjectionMatrix), viewportMatrix);
+		Vector3 endScreen = Transform(Transform(end, worldViewProjectionMatrix), viewportMatrix);
 
 		uint32_t color = (z == 0.0f) ? 0x000000FF : 0xAAAAAAFF;
-
-		Novice::DrawLine(int(startScreen.x), int(startScreen.y), int(endScreen.x),
-			int(endScreen.y), color);
+		Novice::DrawLine(int(startScreen.x), int(startScreen.y), int(endScreen.x), int(endScreen.y), color);
 	}
 }
 
 
 void MathSphere::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
+
+	// 平面の中心点（法線ベクトルに距離を掛けたもの）
 	Vector3 center = MultiplyScalar(plane.distance, plane.normal);
 
-	// 平面上の直交ベクトルを2つ生成
-	Vector3 axisX = Normalize(Perpendicular(plane.normal));
-	Vector3 axisY = Normalize(Cross(plane.normal, axisX));
+	// 平面に垂直な2つの単位ベクトルを作成（平面上の軸）
+	Vector3 u = MatrixMath::Normalize(Perpendicular(plane.normal)); // 法線と垂直な任意のベクトル
+	Vector3 v = MatrixMath::Normalize(Cross(plane.normal, u));                // uと法線に垂直なもう一つのベクトル
 
-	// 4頂点を作成（±方向に拡張）
-	float size = 2.0f; // 平面の可視範囲（任意）
-	Vector3 corners[4];
-	corners[0] = Add(center, Add(MultiplyScalar(size, axisX), MultiplyScalar(size, axisY)));  // +X +Y
-	corners[1] = Add(center, Add(MultiplyScalar(-size, axisX), MultiplyScalar(size, axisY))); // -X +Y
-	corners[2] = Add(center, Add(MultiplyScalar(-size, axisX), MultiplyScalar(-size, axisY))); // -X -Y
-	corners[3] = Add(center, Add(MultiplyScalar(size, axisX), MultiplyScalar(-size, axisY))); // +X -Y
+	float size = 2.0f; // 平面を描画する正方形の一辺の半分の長さ
 
-	// 変換（ViewProjection → Viewport）
-	for (int i = 0; i < 4; i++) {
-		corners[i] = Transform(Transform(corners[i], viewProjectionMatrix), viewportMatrix);
-	}
+	// 平面の四隅の座標を計算（正方形の4頂点）
+	Vector3 corners[4] = {
+		Add(center, Add(MultiplyScalar(size, u), MultiplyScalar(size, v))),   // +u +v方向の頂点
+		Add(center, Add(MultiplyScalar(size, u), MultiplyScalar(-size, v))),  // +u -v方向の頂点
+		Add(center, Add(MultiplyScalar(-size, u), MultiplyScalar(-size, v))), // -u -v方向の頂点
+		Add(center, Add(MultiplyScalar(-size, u), MultiplyScalar(size, v)))   // -u +v方向の頂点
+	};
 
-	// 線を描画（四角形として接続）
-	for (int i = 0; i < 4; i++) {
-		int next = (i + 1) % 4;
+	// 4つの頂点をスクリーン座標に変換して線で繋ぐ
+	// viewProjectionMatrix と viewportMatrix をかけ合わせて変換行列を作成
+	Matrix4x4 transform = Multiply(viewProjectionMatrix, viewportMatrix);
+
+	for (int i = 0; i < 4; ++i) {
+		Vector3 screen0 = Transform(corners[i], transform);                 // 頂点iを変換
+		Vector3 screen1 = Transform(corners[(i + 1) % 4], transform);       // 次の頂点を変換
 		Novice::DrawLine(
-			static_cast<int>(corners[i].x),
-			static_cast<int>(corners[i].y),
-			static_cast<int>(corners[next].x),
-			static_cast<int>(corners[next].y),
-			color
+			static_cast<int>(screen0.x), static_cast<int>(screen0.y),       // 頂点iのスクリーン座標
+			static_cast<int>(screen1.x), static_cast<int>(screen1.y),       // 頂点i+1のスクリーン座標
+			color                                                           // 線の色
 		);
 	}
 }
-
 bool MathSphere::IsCollision(const Sphere& sphere, const Plane& plane) {
 	// 球の中心と平面の距離 = dot(plane.normal, sphere.center) - plane.distance
 	float distance = Dot(plane.normal, sphere.center) - plane.distance;
