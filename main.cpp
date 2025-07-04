@@ -2,8 +2,7 @@
 #include "Sphere.h"
 #include "Matrix4x4.h"
 #include <imgui.h>
-#include <segment.h>
-#include <segment.idl>
+
 
 using namespace MatrixMath;
 using namespace MathSphere;
@@ -22,9 +21,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
-	int kWindowWidth = 1280;
-	int kWindowHeight = 720;
-
+	
 
 
 
@@ -38,7 +35,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Plane plane = { 0.0f,1.0f,0.0f };
 
-	Segment segment{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
+	//Segment segment{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
 
 	Vector3 point{ -1.5f,0.6f,0.6f };
 
@@ -90,7 +87,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		);
 
 		// ワールド行列（グリッドや球の位置）
-		Matrix4x4 worldMatrix = MakeIdentity();
+		Matrix4x4 worldMatrix =  MakeIdentity4x4();
+
 
 		// 各種行列の合成
 		Matrix4x4 viewProjectionMatrix =Multiply(viewMatrix, projectionMatrix);

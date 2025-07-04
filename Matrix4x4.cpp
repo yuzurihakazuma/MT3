@@ -254,7 +254,15 @@ Matrix4x4 MatrixMath::Inverse(const Matrix4x4& m) {
 	return result;
 }
 
+// 単位行列の作成
+Matrix4x4 MatrixMath::MakeIdentity4x4() {
+	Matrix4x4 result = {};
 
+	for (int i = 0; i < 4; ++i) {
+		result.m[i][i] = 1.0f;
+	}
+	return result;
+}
 // 座標変換
 Vector3 MatrixMath::Transform(const Vector3& vector, const Matrix4x4& matrix) {
 
