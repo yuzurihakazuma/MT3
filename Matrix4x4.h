@@ -21,6 +21,7 @@ namespace MatrixMath {
 	// 長さ(ノルム)
 	float Length(const Vector3& v);
 	
+	Vector3 Project(const Vector3& v1, const Vector3& v2);
 	
 	// 正規化
 	Vector3 Normalize(const Vector3& v);

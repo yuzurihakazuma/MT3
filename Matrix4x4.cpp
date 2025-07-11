@@ -52,6 +52,12 @@ float MatrixMath::Length(const Vector3& v) {
 
 	return result;
 }
+Vector3 MatrixMath::Project(const Vector3& v1, const Vector3& v2) {
+	float d = Dot(v2, v2);
+	if (d == 0.0f) return { 0, 0, 0 };
+	float t = Dot(v1, v2) / d;
+	return Multiply(v2, t);
+}
 // 正規化
 Vector3 MatrixMath::Normalize(const Vector3& v) {
 
