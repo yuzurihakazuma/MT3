@@ -479,5 +479,15 @@ void MatrixMath::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMa
 void MatrixMath::DrawTriangle(const Triangle& triangle, const Matrix4x4& viewportMatrix, uint32_t color) {}
 
 bool MatrixMath::IsCollision(const Triangle& triangle, const Segment& segemnt) {
-	return false;
+	Vector3 startToPlane = segment.start;
+	Vector3 endToPlane = segment.end;
+
+	// 各点の平面との距離を求める
+	float d1 = Dot(plane.normal, startToPlane) - plane.distance;
+	float d2 = Dot(plane.normal, endToPlane) - plane.distance;
+
+	// どちらかが正、どちらかが負なら交差している
+	return d1 * d2 <= 0.0f;
 }
+
+
