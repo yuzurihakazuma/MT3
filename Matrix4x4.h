@@ -21,7 +21,7 @@ namespace MatrixMath {
 	// 長さ(ノルム)
 	float Length(const Vector3& v);
 	
-	Vector3 Project(const Vector3& v1, const Vector3& v2);
+	Vector3 ScreenTransform(const Vector3& v, const Matrix4x4& vp, const Matrix4x4& viewport);
 	
 	// 正規化
 	Vector3 Normalize(const Vector3& v);

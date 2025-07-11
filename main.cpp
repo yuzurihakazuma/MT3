@@ -29,11 +29,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 cameraRotate{ 0.26f,0.0f,0.0f };
 
 	
-
-	Plane plane = { 0.0f,1.0f,0.0f };
-	// 1. 球の代わりに線分を用意
-	Segment segment = { {-2.0f, 0.0f, 0.0f}, {2.0f, 2.0f, 0.0f} };
-	
+	Triangle triangle = {
+		{{ 0.0f, 0.0f, 0.0f },
+		 { 1.0f, 0.0f, 0.0f },
+		 { 0.0f, 1.0f, 0.0f }}
+	};
+	Segment segment = {
+	{-1.0f, 0.5f, 0.0f},
+	{ 1.0f, 0.5f, 0.0f}
+	};
 	Vector3 point{ -1.5f,0.6f,0.6f };
 
 	unsigned int color = BLACK;
@@ -57,19 +61,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
-		//各種行列の計算
-
-
-		/*Matrix4x4 cameraMatrix = MatrixMath::MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, cameraRotate, cameraTranslate);
-
-		Matrix4x4 viewMatrix = MatrixMath::Inverse(cameraMatrix);
-
-		Matrix4x4 projectionMatrix = MatrixMath::MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
-
-		Matrix4x4 worldViewProjectionMatrix = MatrixMath::Multiply(cameraMatrix, MatrixMath::Multiply(viewMatrix, projectionMatrix));
-
-		Matrix4x4 viewportMatrix = MatrixMath::MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);*/
-
+		
 
 		// ビュー行列（カメラ位置と向き）
 		Matrix4x4 cameraMatrix = MakeAffine({ 1.0f, 1.0f, 1.0f }, cameraRotate, cameraTranslate);
@@ -108,16 +100,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
-		ImGui::Begin("Window");
+		ImGui::Begin("Control");
 		ImGui::DragFloat3("Segment Start", &segment.start.x, 0.01f);
-		ImGui::DragFloat("Segment End", &segment.end.x, 0.01f);
-		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.01f);
-		ImGui::DragFloat("Plane.Distance", &plane.distance, 0.01f);
-
-		plane.normal = MatrixMath::Normalize(plane.normal); // 法線ベクトルを正規化
-
-		// 2. 衝突判定
-		if (IsCollision(segment, plane)) {
+		ImGui::DragFloat3("Segment End", &segment.end.x, 0.01f);
+		ImGui::DragFloat3("Triangle V0", &triangle.vertices[0].x, 0.01f);
+		ImGui::DragFloat3("Triangle V1", &triangle.vertices[1].x, 0.01f);
+		ImGui::DragFloat3("Triangle V2", &triangle.vertices[2].x, 0.01f);
+		ImGui::End();
+		// 衝突判定
+		if (IsCollision(triangle, segment)) {
 			color = RED;
 		} else {
 			color = WHITE;
@@ -125,23 +116,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
-		// Segment描画
+		// 線分描画
 		Vector3 screenStart = Transform(Transform(segment.start, worldViewProjectionMatrix), viewportMatrix);
 		Vector3 screenEnd = Transform(Transform(segment.end, worldViewProjectionMatrix), viewportMatrix);
-		Novice::DrawLine(
-			int(screenStart.x), int(screenStart.y),
-			int(screenEnd.x), int(screenEnd.y),
-			color
-		);
-		DrawGrid(worldViewProjectionMatrix, viewportMatrix,-0.6f);
+		Novice::DrawLine((int)screenStart.x, (int)screenStart.y, (int)screenEnd.x, (int)screenEnd.y, color);
 
-		DrawPlane(plane, viewProjectionMatrix, viewportMatrix, WHITE);
-
-		/*ImGui::DragFloat3("Point", &point.x, 0.01f);*/
-		//ImGui::DragFloat3("segmentOrigin", &segment.origin.x, 0.01f); // ←中心座標
-		//ImGui::DragFloat("segmentDiff", &segment.diff.x, 0.01f);     // ←半径
-		//ImGui::InputFloat3("Project", &project.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
-		ImGui::End();
+		// 三角形描画
+		Matrix4x4 triangleTransform = Multiply(worldViewProjectionMatrix, viewportMatrix);
+		DrawTriangle(triangle, triangleTransform, WHITE);
+		
+		
+		DrawGrid(worldViewProjectionMatrix, viewportMatrix, 0.0f);
 		///
 		/// ↑描画処理ここまで
 		///

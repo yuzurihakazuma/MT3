@@ -52,11 +52,9 @@ float MatrixMath::Length(const Vector3& v) {
 
 	return result;
 }
-Vector3 MatrixMath::Project(const Vector3& v1, const Vector3& v2) {
-	float d = Dot(v2, v2);
-	if (d == 0.0f) return { 0, 0, 0 };
-	float t = Dot(v1, v2) / d;
-	return Multiply(v2, t);
+Vector3 MatrixMath::ScreenTransform(const Vector3& v, const Matrix4x4& vp, const Matrix4x4& viewport) {
+	Vector3 ndc = Transform(v, vp);           // ← ここでもうw除算済み
+	return Transform(ndc, viewport);          // ビューポート変換
 }
 // 正規化
 Vector3 MatrixMath::Normalize(const Vector3& v) {
@@ -435,11 +433,8 @@ void MatrixMath::DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matr
 }
 
 void MatrixMath::DrawSegment(const Segment& seg, const Matrix4x4& vp, const Matrix4x4& viewport, uint32_t color) {
-	// seg.start と seg.end をスクリーン座標に変換
-	Vector2 a = Project(seg.start, vp, viewport);
-	Vector2 b = Project(seg.end, vp, viewport);
-
-	// 2D座標に線を描画
+	Vector3 a = ScreenTransform(seg.start, vp, viewport);
+	Vector3 b = ScreenTransform(seg.end, vp, viewport);
 	Novice::DrawLine((int)a.x, (int)a.y, (int)b.x, (int)b.y, color);
 }
 
@@ -477,18 +472,42 @@ void MatrixMath::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMa
 	}
 }
 
-void MatrixMath::DrawTriangle(const Triangle& triangle, const Matrix4x4& viewportMatrix, uint32_t color) {}
+void MatrixMath::DrawTriangle(const Triangle& triangle, const Matrix4x4& viewportMatrix, uint32_t color) {
+	// 各頂点をビューポート変換（画面座標に変換）
+	Vector3 screenA = Transform(triangle.vertices[0], viewportMatrix);
+	Vector3 screenB = Transform(triangle.vertices[1], viewportMatrix);
+	Vector3 screenC = Transform(triangle.vertices[2], viewportMatrix);
 
-bool MatrixMath::IsCollision(const Triangle& triangle, const Segment& segemnt) {
-	Vector3 startToPlane = segment.start;
-	Vector3 endToPlane = segment.end;
+	// 三角形の3辺を描画
+	Novice::DrawLine((int)screenA.x, (int)screenA.y, (int)screenB.x, (int)screenB.y, color);
+	Novice::DrawLine((int)screenB.x, (int)screenB.y, (int)screenC.x, (int)screenC.y, color);
+	Novice::DrawLine((int)screenC.x, (int)screenC.y, (int)screenA.x, (int)screenA.y, color);
+}
 
-	// 各点の平面との距離を求める
-	float d1 = Dot(plane.normal, startToPlane) - plane.distance;
-	float d2 = Dot(plane.normal, endToPlane) - plane.distance;
+bool MatrixMath::IsCollision(const Triangle& triangle, const Segment& segment) {
+	const float EPSILON = 1e-6f;
 
-	// どちらかが正、どちらかが負なら交差している
-	return d1 * d2 <= 0.0f;
+	Vector3 edge1 = Subtract(triangle.vertices[1], triangle.vertices[0]);
+	Vector3 edge2 = Subtract(triangle.vertices[2], triangle.vertices[0]);
+	Vector3 direction = Subtract(segment.end, segment.start);
+	Vector3 h = Cross(direction, edge2);
+	float a = Dot(edge1, h);
+
+	if (fabs(a) < EPSILON) return false; // 平行なので衝突なし
+
+	float f = 1.0f / a;
+	Vector3 s = Subtract(segment.start, triangle.vertices[0]);
+	float u = f * Dot(s, h);
+	if (u < 0.0f || u > 1.0f) return false;
+
+	Vector3 q = Cross(s, edge1);
+	float v = f * Dot(direction, q);
+	if (v < 0.0f || u + v > 1.0f) return false;
+
+	float t = f * Dot(edge2, q);
+	if (t < 0.0f || t > 1.0f) return false; // 線分の範囲外
+
+	return true;
 }
 
 
