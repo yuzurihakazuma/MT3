@@ -3,7 +3,7 @@
 #include <math.h>
 #include <cassert>
 #include <cmath>
-
+#include <Novice.h>
 using namespace MatrixMath;
 // 加算
 Vector3 MatrixMath::Add(const Vector3& v1, const Vector3& v2) {
@@ -331,18 +331,6 @@ Matrix4x4 MatrixMath::Viewport(float left, float top, float width, float height,
 }
 
 
-#define _USE_MATH_DEFINES 
-#include "Sphere.h"
-#include <cmath>
-#include <math.h>
-#include <assert.h>
-#include <vector>
-#include <Novice.h>
-
-using namespace MatrixMath;
-using namespace MathSphere;
-
-
 Vector3 MatrixMath::Perpendicular(const Vector3& vector) {
 	// 法線の絶対値の小さい成分を避けて直交ベクトルを作成
 	if (vector.x != 0.0f || vector.y != 0.0f) {
@@ -440,7 +428,11 @@ void MatrixMath::DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matr
 	}
 }
 
-
+void MatrixMath::DrawSegment(const Segment& seg, const Matrix4x4& vp, const Matrix4x4& viewport, uint32_t color) {
+	Vector2 a = Project(seg.origin, vp, viewport);
+	Vector2 b = Project(Add(seg.origin, seg.diff), vp, viewport);
+	Novice::DrawLine((int)a.x, (int)a.y, (int)b.x, (int)b.y, color);
+}
 
 void MatrixMath::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
 

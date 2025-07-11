@@ -69,6 +69,10 @@ namespace MatrixMath {
 	// グリッド
 	void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& Viewport, float yOffset);
 
+	void DrawSegment(const Segment& seg, const Matrix4x4& vp, const Matrix4x4& viewport, uint32_t color);
+	
+
+
 	// 平面
 	void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
 	// 三角形
