@@ -429,8 +429,11 @@ void MatrixMath::DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matr
 }
 
 void MatrixMath::DrawSegment(const Segment& seg, const Matrix4x4& vp, const Matrix4x4& viewport, uint32_t color) {
-	Vector2 a = Project(seg.origin, vp, viewport);
-	Vector2 b = Project(Add(seg.origin, seg.diff), vp, viewport);
+	// seg.start と seg.end をスクリーン座標に変換
+	Vector2 a = Project(seg.start, vp, viewport);
+	Vector2 b = Project(seg.end, vp, viewport);
+
+	// 2D座標に線を描画
 	Novice::DrawLine((int)a.x, (int)a.y, (int)b.x, (int)b.y, color);
 }
 
