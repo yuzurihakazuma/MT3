@@ -30,3 +30,8 @@ struct Segment {
 	Vector3 start; // 線分の始点
 	Vector3 end;   // 線分の終点
 };
+
+struct Triangle {
+	Vector3 vertices[3]; // 原点
+
+};
