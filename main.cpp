@@ -99,21 +99,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 
+		ImGui::SetNextWindowPos(ImVec2(980, 10), ImGuiCond_Once);  // 右上に配置
+		ImGui::SetNextWindowSize(ImVec2(280, 230), ImGuiCond_Once); // サイズ調整
 
-		ImGui::Begin("Control");
+		ImGui::Begin("Debug"); // ←これを必ず入れる！見た目の枠の開始
+
+		ImGui::Text("Camera");
+		ImGui::DragFloat3("Camera Translate", &cameraTranslate.x, 0.01f);
+		ImGui::DragFloat3("Camera Rotate", &cameraRotate.x, 0.01f);
+
+		ImGui::Separator();
+		ImGui::Text("Segment");
 		ImGui::DragFloat3("Segment Start", &segment.start.x, 0.01f);
 		ImGui::DragFloat3("Segment End", &segment.end.x, 0.01f);
+
+		ImGui::Separator();
+		ImGui::Text("Triangle");
 		ImGui::DragFloat3("Triangle V0", &triangle.vertices[0].x, 0.01f);
 		ImGui::DragFloat3("Triangle V1", &triangle.vertices[1].x, 0.01f);
 		ImGui::DragFloat3("Triangle V2", &triangle.vertices[2].x, 0.01f);
-		ImGui::End();
-		// 衝突判定
-		if (IsCollision(triangle, segment)) {
+
+		ImGui::End(); // ←これも忘れずに
+		if (MatrixMath::IsCollision(triangle, segment)) {
 			color = RED;
 		} else {
 			color = WHITE;
 		}
-
 
 
 		// 線分描画

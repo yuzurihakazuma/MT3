@@ -485,29 +485,44 @@ void MatrixMath::DrawTriangle(const Triangle& triangle, const Matrix4x4& viewpor
 }
 
 bool MatrixMath::IsCollision(const Triangle& triangle, const Segment& segment) {
-	const float EPSILON = 1e-6f;
-
+	// Step 1: 平面の法線を求める
 	Vector3 edge1 = Subtract(triangle.vertices[1], triangle.vertices[0]);
 	Vector3 edge2 = Subtract(triangle.vertices[2], triangle.vertices[0]);
-	Vector3 direction = Subtract(segment.end, segment.start);
-	Vector3 h = Cross(direction, edge2);
-	float a = Dot(edge1, h);
+	Vector3 normal = Normalize(Cross(edge1, edge2));
 
-	if (fabs(a) < EPSILON) return false; // 平行なので衝突なし
+	// Step 2: 線分と平面の交点を求める
+	Vector3 dir = Subtract(segment.end, segment.start);
+	float denom = Dot(normal, dir);
+	if (fabs(denom) < 1e-6f) return false; // 平行
 
-	float f = 1.0f / a;
-	Vector3 s = Subtract(segment.start, triangle.vertices[0]);
-	float u = f * Dot(s, h);
-	if (u < 0.0f || u > 1.0f) return false;
+	float d = Dot(normal, triangle.vertices[0]);
+	float t = (d - Dot(normal, segment.start)) / denom;
 
-	Vector3 q = Cross(s, edge1);
-	float v = f * Dot(direction, q);
-	if (v < 0.0f || u + v > 1.0f) return false;
+	if (t < 0.0f || t > 1.0f) return false; // 線分範囲外
 
-	float t = f * Dot(edge2, q);
-	if (t < 0.0f || t > 1.0f) return false; // 線分の範囲外
+	// Step 3: 線分上の交点を求める
+	Vector3 p = Add(segment.start, MultiplyScalar(t, dir));
 
-	return true;
+	// Step 4: 三角形の内側かどうかを外積・内積で判定
+	Vector3 v0 = triangle.vertices[0];
+	Vector3 v1 = triangle.vertices[1];
+	Vector3 v2 = triangle.vertices[2];
+
+	Vector3 vp0 = Subtract(p, v0);
+	Vector3 vp1 = Subtract(p, v1);
+	Vector3 vp2 = Subtract(p, v2);
+
+	Vector3 c1 = Cross(Subtract(v1, v0), vp0);
+	Vector3 c2 = Cross(Subtract(v2, v1), vp1);
+	Vector3 c3 = Cross(Subtract(v0, v2), vp2);
+
+	if (Dot(c1, normal) >= 0.0f &&
+		Dot(c2, normal) >= 0.0f &&
+		Dot(c3, normal) >= 0.0f) {
+		return true; // 三角形の内側に交差
+	}
+
+	return false;
 }
 
 
