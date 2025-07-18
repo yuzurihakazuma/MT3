@@ -5,6 +5,15 @@
 #include <cassert>
 #include <cmath>
 #include <Novice.h>
+
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
+
+
 using namespace MatrixMath;
 // 加算
 Vector3 MatrixMath::Add(const Vector3& v1, const Vector3& v2) {
@@ -584,6 +593,45 @@ bool MatrixMath::IsCollision(const AABB& aabb, const Sphere& sphere){
 
 	// 衝突しているか：距離² <= 半径²
 	return distanceSq <= ( sphere.radius * sphere.radius );
+}
+
+bool MatrixMath::IsCollision(const AABB& aabb, const Segment& segment){
+	// 線分の方向
+	Vector3 dir = Subtract(segment.end, segment.start);
+
+	// tの開始・終了範囲（線分のパラメータ範囲）
+	float tMin = 0.0f;
+	float tMax = 1.0f;
+
+	// 各軸でスラブ交差判定
+	for ( int i = 0; i < 3; i++ ) {
+		float start = ( &segment.start.x )[i];
+		float delta = ( &dir.x )[i];
+		float minVal = ( &aabb.min.x )[i];
+		float maxVal = ( &aabb.max.x )[i];
+
+		if ( fabs(delta) < 1e-6f ) {
+			// 平行 → AABBのスラブの範囲外なら衝突なし
+			if ( start < minVal || start > maxVal ) {
+				return false;
+			}
+		} else {
+			float invD = 1.0f / delta;
+			float t1 = ( minVal - start ) * invD;
+			float t2 = ( maxVal - start ) * invD;
+
+			if ( t1 > t2 ) std::swap(t1, t2);
+
+			tMin = std::max(tMin, t1);
+			tMax = std::min(tMax, t2);
+
+			if ( tMin > tMax ) {
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
 

@@ -92,6 +92,8 @@ namespace MatrixMath {
 	
 	bool IsCollision(const   AABB& aabb, const Sphere& sphere);
 
+	bool IsCollision(const AABB& aabb, const Segment& segment);
+
 }
 
 
