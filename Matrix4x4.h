@@ -18,6 +18,9 @@ namespace MatrixMath {
 	Vector3 Cross(const Vector3& a, const Vector3& b);
 	
 	
+	// 行列とベクトルの乗算（行ベクトル×列行列）例
+	Vector4 Multiply(const Matrix4x4& mat, const Vector4& vec);
+
 	// 長さ(ノルム)
 	float Length(const Vector3& v);
 	
@@ -27,7 +30,7 @@ namespace MatrixMath {
 	Vector3 Normalize(const Vector3& v);
 
 	// スカラー倍
-	Vector3 MultiplyScalar(float scalar, const Vector3& v);
+	Vector3 Multiply(float scalar, const Vector3& v);
 
 	// 行列の積
 	Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
@@ -79,8 +82,11 @@ namespace MatrixMath {
 	// 三角形
 	void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewportMatrix,uint32_t color);
 
-	// 線分と三角形の当たり判定
-	bool IsCollision(const Triangle& triangle,const Segment& segemnt);
+	// AABBの描画
+	void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
+
+	
+	bool IsCollision(const AABB& aabb1,const AABB& aabb2);
 	
 
 }

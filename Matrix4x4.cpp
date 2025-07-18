@@ -68,7 +68,7 @@ Vector3 MatrixMath::Normalize(const Vector3& v) {
 	return result;
 }
 //スカラー倍
-Vector3 MatrixMath::MultiplyScalar(float scalar, const Vector3& v) {
+Vector3 MatrixMath::Multiply(float scalar, const Vector3& v) {
 
 	Vector3 result = {};
 
@@ -95,6 +95,16 @@ Matrix4x4 MatrixMath::Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	return result;
 }
 
+
+// 行列とベクトルの乗算
+Vector4 MatrixMath::Multiply(const Matrix4x4& mat, const Vector4& vec){
+	Vector4 result;
+	result.x = vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0] + vec.w * mat.m[3][0];
+	result.y = vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1] + vec.w * mat.m[3][1];
+	result.z = vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2] + vec.w * mat.m[3][2];
+	result.w = vec.x * mat.m[0][3] + vec.y * mat.m[1][3] + vec.z * mat.m[2][3] + vec.w * mat.m[3][3];
+	return result;
+}
 
 
 
@@ -441,7 +451,7 @@ void MatrixMath::DrawSegment(const Segment& seg, const Matrix4x4& vp, const Matr
 void MatrixMath::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
 
 	// 平面の中心点（法線ベクトルに距離を掛けたもの）
-	Vector3 center = MultiplyScalar(plane.distance, plane.normal);
+	Vector3 center = Multiply(plane.distance, plane.normal);
 
 	// 平面に垂直な2つの単位ベクトルを作成（平面上の軸）
 	Vector3 u = MatrixMath::Normalize(Perpendicular(plane.normal)); // 法線と垂直な任意のベクトル
@@ -451,10 +461,10 @@ void MatrixMath::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMa
 
 	// 平面の四隅の座標を計算（正方形の4頂点）
 	Vector3 corners[4] = {
-		Add(center, Add(MultiplyScalar(size, u), MultiplyScalar(size, v))),   // +u +v方向の頂点
-		Add(center, Add(MultiplyScalar(size, u), MultiplyScalar(-size, v))),  // +u -v方向の頂点
-		Add(center, Add(MultiplyScalar(-size, u), MultiplyScalar(-size, v))), // -u -v方向の頂点
-		Add(center, Add(MultiplyScalar(-size, u), MultiplyScalar(size, v)))   // -u +v方向の頂点
+		Add(center, Add(Multiply(size, u), Multiply(size, v))),   // +u +v方向の頂点
+		Add(center, Add(Multiply(size, u), Multiply(-size, v))),  // +u -v方向の頂点
+		Add(center, Add(Multiply(-size, u), Multiply(-size, v))), // -u -v方向の頂点
+		Add(center, Add(Multiply(-size, u), Multiply(size, v)))   // -u +v方向の頂点
 	};
 
 	// 4つの頂点をスクリーン座標に変換して線で繋ぐ
@@ -484,45 +494,58 @@ void MatrixMath::DrawTriangle(const Triangle& triangle, const Matrix4x4& viewpor
 	Novice::DrawLine((int)screenC.x, (int)screenC.y, (int)screenA.x, (int)screenA.y, color);
 }
 
-bool MatrixMath::IsCollision(const Triangle& triangle, const Segment& segment) {
-	// Step 1: 平面の法線を求める
-	Vector3 edge1 = Subtract(triangle.vertices[1], triangle.vertices[0]);
-	Vector3 edge2 = Subtract(triangle.vertices[2], triangle.vertices[0]);
-	Vector3 normal = Normalize(Cross(edge1, edge2));
+void MatrixMath::DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color){
+	// AABBの8頂点を求める
+	Vector3 vertices[8] = {
+		{aabb.min.x, aabb.min.y, aabb.min.z}, // 0
+		{aabb.max.x, aabb.min.y, aabb.min.z}, // 1
+		{aabb.min.x, aabb.max.y, aabb.min.z}, // 2
+		{aabb.max.x, aabb.max.y, aabb.min.z}, // 3
+		{aabb.min.x, aabb.min.y, aabb.max.z}, // 4
+		{aabb.max.x, aabb.min.y, aabb.max.z}, // 5
+		{aabb.min.x, aabb.max.y, aabb.max.z}, // 6
+		{aabb.max.x, aabb.max.y, aabb.max.z}  // 7
+	};
 
-	// Step 2: 線分と平面の交点を求める
-	Vector3 dir = Subtract(segment.end, segment.start);
-	float denom = Dot(normal, dir);
-	if (fabs(denom) < 1e-6f) return false; // 平行
-
-	float d = Dot(normal, triangle.vertices[0]);
-	float t = (d - Dot(normal, segment.start)) / denom;
-
-	if (t < 0.0f || t > 1.0f) return false; // 線分範囲外
-
-	// Step 3: 線分上の交点を求める
-	Vector3 p = Add(segment.start, MultiplyScalar(t, dir));
-
-	// Step 4: 三角形の内側かどうかを外積・内積で判定
-	Vector3 v0 = triangle.vertices[0];
-	Vector3 v1 = triangle.vertices[1];
-	Vector3 v2 = triangle.vertices[2];
-
-	Vector3 vp0 = Subtract(p, v0);
-	Vector3 vp1 = Subtract(p, v1);
-	Vector3 vp2 = Subtract(p, v2);
-
-	Vector3 c1 = Cross(Subtract(v1, v0), vp0);
-	Vector3 c2 = Cross(Subtract(v2, v1), vp1);
-	Vector3 c3 = Cross(Subtract(v0, v2), vp2);
-
-	if (Dot(c1, normal) >= 0.0f &&
-		Dot(c2, normal) >= 0.0f &&
-		Dot(c3, normal) >= 0.0f) {
-		return true; // 三角形の内側に交差
+	// 各頂点をスクリーン座標に変換
+	Vector3 screen[8];
+	for ( int i = 0; i < 8; i++ ) {
+		Vector4 temp = { vertices[i].x, vertices[i].y, vertices[i].z, 1.0f };
+		temp = Multiply(viewProjectionMatrix, temp);
+		temp = Multiply(viewportMatrix, temp);
+		screen[i] = { temp.x / temp.w, temp.y / temp.w, temp.z / temp.w };
 	}
 
-	return false;
+	// AABBのエッジを結ぶ線分（12本）
+	int edges[12][2] = {
+		{0,1},{1,3},{3,2},{2,0}, // 前面
+		{4,5},{5,7},{7,6},{6,4}, // 背面
+		{0,4},{1,5},{2,6},{3,7}  // 側面
+	};
+
+	for ( int i = 0; i < 12; i++ ) {
+		Novice::DrawLine(
+			static_cast< int >(screen[edges[i][0]].x),
+			static_cast< int >(screen[edges[i][0]].y),
+			static_cast< int >(screen[edges[i][1]].x),
+			static_cast< int >(screen[edges[i][1]].y),
+			color
+		);
+	}
 }
+
+
+// AABBの衝突判定
+bool MatrixMath::IsCollision(const AABB& aabb1, const AABB& aabb2){
+	// X軸の判定
+	if ( aabb1.max.x < aabb2.min.x || aabb1.min.x > aabb2.max.x ) return false;
+	// Y軸の判定
+	if ( aabb1.max.y < aabb2.min.y || aabb1.min.y > aabb2.max.y ) return false;
+	// Z軸の判定
+	if ( aabb1.max.z < aabb2.min.z || aabb1.min.z > aabb2.max.z ) return false;
+
+	return true; // 全軸で重なっていれば衝突している
+}
+
 
 

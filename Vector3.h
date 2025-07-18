@@ -1,5 +1,12 @@
 #pragma once
 
+struct Vector4{
+	float x;
+	float y;
+	float z;
+	float w; // 同次座標系のw成分
+};
+
 struct Vector3 {
 
 	float x;
@@ -34,4 +41,9 @@ struct Segment {
 struct Triangle {
 	Vector3 vertices[3]; // 原点
 
+};
+
+struct AABB{
+	Vector3 min; // AABBの最小点
+	Vector3 max; // AABBの最大点
 };
