@@ -112,6 +112,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		ImGui::End(); // ←これも忘れずに
 		
 		
+
 		AABB fixedAABB1 = FixAABB(aabb1);
 
 		if ( MatrixMath::IsCollision(fixedAABB1, segment) ) {
