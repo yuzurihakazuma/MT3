@@ -27,15 +27,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	unsigned int aabbColor1 = WHITE;
 
 
-	Segment segment = { {-0.5f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f} };
-	unsigned int segmentColor = WHITE;
+	Sphere sphere = { {0.0f, 0.0f, 0.0f}, 0.5f }; // 位置と半径
+	unsigned int sphereColor = WHITE;
+
 	Vector3 cameraPosition = { 0.0f,0.0f,-1.0f };
 
 	Vector3 cameraTranslate { 0.0f,1.9f,-6.49f };
 	Vector3 cameraRotate { 0.26f,0.0f,0.0f };
 
 
-	
+
 
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -105,25 +106,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		ImGui::DragFloat3("AABB1 Min", &aabb1.min.x, 0.01f);
 		ImGui::DragFloat3("AABB1 Max", &aabb1.max.x, 0.01f);
 		ImGui::Separator();
-		ImGui::Separator();
-		ImGui::Text("Segment");
-		ImGui::DragFloat3("Segment Start", &segment.start.x, 0.01f);
-		ImGui::DragFloat3("Segment End", &segment.end.x, 0.01f);
+		ImGui::Text("Sphere");
+		ImGui::DragFloat3("Sphere Center", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("Sphere Radius", &sphere.radius, 0.01f, 0.0f, 10.0f);
+
 		ImGui::End(); // ←これも忘れずに
-		
-		
 		AABB fixedAABB1 = FixAABB(aabb1);
 
-		if ( MatrixMath::IsCollision(fixedAABB1, segment) ) {
+
+
+		if ( MatrixMath::IsCollision(fixedAABB1, sphere) ) {
 			aabbColor1 = RED;
 		} else {
 			aabbColor1 = WHITE;
 		}
 
 		MatrixMath::DrawAABB(aabb1, worldViewProjectionMatrix, viewportMatrix, aabbColor1);
-		Vector3 screenStart = Transform(Transform(segment.start, worldViewProjectionMatrix), viewportMatrix);
-		Vector3 screenEnd = Transform(Transform(segment.end, worldViewProjectionMatrix), viewportMatrix);
-		Novice::DrawLine(( int ) screenStart.x, ( int ) screenStart.y, ( int ) screenEnd.x, ( int ) screenEnd.y, segmentColor);
+
+		DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, sphereColor);
 
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix, 0.0f);
 		///

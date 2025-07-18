@@ -5,27 +5,27 @@
 
 
 
-namespace MatrixMath {
+namespace MatrixMath{
 
 	// 加算
 	Vector3 Add(const Vector3& v1, const Vector3& v2);
 	// 減算
 	Vector3 Subtract(const Vector3& v1, const Vector3& v2);
-	
+
 	// 内積
 	float Dot(const Vector3& v1, const Vector3& v2);
 	// 外積
 	Vector3 Cross(const Vector3& a, const Vector3& b);
-	
-	
+
+
 	// 行列とベクトルの乗算（行ベクトル×列行列）例
 	Vector4 Multiply(const Matrix4x4& mat, const Vector4& vec);
 
 	// 長さ(ノルム)
 	float Length(const Vector3& v);
-	
+
 	Vector3 ScreenTransform(const Vector3& v, const Matrix4x4& vp, const Matrix4x4& viewport);
-	
+
 	// 正規化
 	Vector3 Normalize(const Vector3& v);
 
@@ -64,7 +64,7 @@ namespace MatrixMath {
 	// ビューポート変換行列
 	Matrix4x4 Viewport(float left, float top, float width, float height, float minDepth, float maxDepth);
 
-	
+
 	Vector3 Perpendicular(const Vector3& normal);
 
 	// 球
@@ -74,13 +74,11 @@ namespace MatrixMath {
 	void DrawGrid(const Matrix4x4& worldViewProjectionMatrix, const Matrix4x4& Viewport, float yOffset);
 
 	void DrawSegment(const Segment& seg, const Matrix4x4& vp, const Matrix4x4& viewport, uint32_t color);
-	
-
 
 	// 平面
 	void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
 	// 三角形
-	void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewportMatrix,uint32_t color);
+	void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewportMatrix, uint32_t color);
 
 	// AABBの描画
 	void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
@@ -88,11 +86,9 @@ namespace MatrixMath {
 	AABB FixAABB(const AABB& aabb);
 
 
-	bool IsCollision(const AABB& aabb1,const AABB& aabb2);
-	
-	bool IsCollision(const   AABB& aabb, const Sphere& sphere);
+	bool IsCollision(const AABB& aabb1, const AABB& aabb2);
 
-	bool IsCollision(const AABB& aabb, const Segment& segment);
+	bool IsCollision(const   AABB& aabb, const Sphere& sphere);
 
 }
 
