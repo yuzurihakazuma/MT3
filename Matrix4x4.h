@@ -85,7 +85,9 @@ namespace MatrixMath {
 	// AABBの描画
 	void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
 
-	
+	AABB FixAABB(const AABB& aabb);
+
+
 	bool IsCollision(const AABB& aabb1,const AABB& aabb2);
 	
 

@@ -534,17 +534,38 @@ void MatrixMath::DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatri
 	}
 }
 
+AABB MatrixMath::FixAABB(const AABB& aabb){
+	AABB fixed = aabb;
 
-// AABBの衝突判定
+	// x軸
+	if ( fixed.min.x > fixed.max.x ) std::swap(fixed.min.x, fixed.max.x);
+	// y軸
+	if ( fixed.min.y > fixed.max.y ) std::swap(fixed.min.y, fixed.max.y);
+	// z軸
+	if ( fixed.min.z > fixed.max.z ) std::swap(fixed.min.z, fixed.max.z);
+
+	return fixed;
+}
+
 bool MatrixMath::IsCollision(const AABB& aabb1, const AABB& aabb2){
-	// X軸の判定
-	if ( aabb1.max.x < aabb2.min.x || aabb1.min.x > aabb2.max.x ) return false;
-	// Y軸の判定
-	if ( aabb1.max.y < aabb2.min.y || aabb1.min.y > aabb2.max.y ) return false;
-	// Z軸の判定
-	if ( aabb1.max.z < aabb2.min.z || aabb1.min.z > aabb2.max.z ) return false;
+	// 自動でmin/maxを修正（安全対応）
+	AABB a = aabb1;
+	AABB b = aabb2;
 
-	return true; // 全軸で重なっていれば衝突している
+	if ( a.min.x > a.max.x ) std::swap(a.min.x, a.max.x);
+	if ( a.min.y > a.max.y ) std::swap(a.min.y, a.max.y);
+	if ( a.min.z > a.max.z ) std::swap(a.min.z, a.max.z);
+
+	if ( b.min.x > b.max.x ) std::swap(b.min.x, b.max.x);
+	if ( b.min.y > b.max.y ) std::swap(b.min.y, b.max.y);
+	if ( b.min.z > b.max.z ) std::swap(b.min.z, b.max.z);
+
+	// 衝突判定
+	if ( a.max.x < b.min.x || a.min.x > b.max.x ) return false;
+	if ( a.max.y < b.min.y || a.min.y > b.max.y ) return false;
+	if ( a.max.z < b.min.z || a.min.z > b.max.z ) return false;
+
+	return true;
 }
 
 
