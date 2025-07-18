@@ -25,9 +25,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	AABB aabb2 = { ( 0.2f,0.2f,0.2f ) , ( 1.0f,1.0f,1.0f ) };
 
 	unsigned int aabbColor1 = WHITE;
-	unsigned int aabbColor2 = WHITE;
 
-	
+
+	Sphere sphere = { {0.0f, 0.0f, 0.0f}, 0.5f }; // 位置と半径
+	unsigned int sphereColor = WHITE;
 
 	Vector3 cameraPosition = { 0.0f,0.0f,-1.0f };
 
@@ -35,21 +36,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	Vector3 cameraRotate { 0.26f,0.0f,0.0f };
 
 
-	/*Triangle triangle = {
-		{{ 0.0f, 0.0f, 0.0f },
-		 { 1.0f, 0.0f, 0.0f },
-		 { 0.0f, 1.0f, 0.0f }}
-	};
-	Segment segment = {
-	{-1.0f, 0.5f, 0.0f},
-	{ 1.0f, 0.5f, 0.0f}
-	};
-	Vector3 point { -1.5f,0.6f,0.6f };*/
-
 	
-
-	//pointを線分に射影したベクトル。今回は正しく計算できているかを確認するためだけに使う
-	//Vector3 closestPoint = ClosestPoint(point, segment);
 
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -118,26 +105,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		ImGui::Text("AABB1");
 		ImGui::DragFloat3("AABB1 Min", &aabb1.min.x, 0.01f);
 		ImGui::DragFloat3("AABB1 Max", &aabb1.max.x, 0.01f);
-
-		ImGui::Text("AABB2");
-		ImGui::DragFloat3("AABB2 Min", &aabb2.min.x, 0.01f);
-		ImGui::DragFloat3("AABB2 Max", &aabb2.max.x, 0.01f);
+		ImGui::Separator();
+		ImGui::Text("Sphere");
+		ImGui::DragFloat3("Sphere Center", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("Sphere Radius", &sphere.radius, 0.01f, 0.0f, 10.0f);
 
 		ImGui::End(); // ←これも忘れずに
 		AABB fixedAABB1 = FixAABB(aabb1);
-		AABB fixedAABB2 = FixAABB(aabb2);
-		if ( MatrixMath::IsCollision(aabb1, aabb2) ) {
-			aabbColor1 = RED;      // aabb1 を赤く
-			aabbColor2 = WHITE;    // aabb2 は白のまま
+		
+
+
+		if ( MatrixMath::IsCollision(fixedAABB1, sphere) ) {
+			aabbColor1 = RED;
 		} else {
-			aabbColor1 = WHITE;    // 衝突していないなら両方白
-			aabbColor2 = WHITE;
+			aabbColor1 = WHITE;
 		}
 
 		MatrixMath::DrawAABB(aabb1, worldViewProjectionMatrix, viewportMatrix, aabbColor1);
-		MatrixMath::DrawAABB(aabb2, worldViewProjectionMatrix, viewportMatrix, aabbColor2);
-
 		
+		DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, sphereColor);
 
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix, 0.0f);
 		///

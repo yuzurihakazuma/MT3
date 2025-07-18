@@ -1,4 +1,5 @@
 #define _USE_MATH_DEFINES
+#include <algorithm>
 #include "Matrix4x4.h"
 #include <math.h>
 #include <cassert>
@@ -566,6 +567,23 @@ bool MatrixMath::IsCollision(const AABB& aabb1, const AABB& aabb2){
 	if ( a.max.z < b.min.z || a.min.z > b.max.z ) return false;
 
 	return true;
+}
+
+bool MatrixMath::IsCollision(const AABB& aabb, const Sphere& sphere){
+	// 最近接点を求める
+	Vector3 closestPoint;
+
+	// 各軸について最近接点をクランプ
+	closestPoint.x = std::clamp(sphere.center.x, aabb.min.x, aabb.max.x);
+	closestPoint.y = std::clamp(sphere.center.y, aabb.min.y, aabb.max.y);
+	closestPoint.z = std::clamp(sphere.center.z, aabb.min.z, aabb.max.z);
+
+	// 球の中心と最近接点との距離の2乗
+	Vector3 diff = Subtract(sphere.center, closestPoint);
+	float distanceSq = Dot(diff, diff);
+
+	// 衝突しているか：距離² <= 半径²
+	return distanceSq <= ( sphere.radius * sphere.radius );
 }
 
 
