@@ -634,5 +634,40 @@ bool MatrixMath::IsCollision(const AABB& aabb, const Segment& segment){
 	return true;
 }
 
+Vector3 MatrixMath::Lerp(const Vector3& v1, const Vector3& v2, float t){
+	Vector3 result = {};
+	result.x = v1.x + ( v2.x - v1.x ) * t;
+	result.y = v1.y + ( v2.y - v1.y ) * t;
+	result.z = v1.z + ( v2.z - v1.z ) * t;
+	return result;
+}
+
+void MatrixMath::DrawBezier(const Vector3& p0, const Vector3& p1, const Vector3& p2,
+	const Matrix4x4& viewProjectionMatrix,
+	const Matrix4x4& viewport,
+	uint32_t color){
+	const int kSegmentCount = 32; // 曲線を何分割するか
+	Vector3 prev = p0;
+
+	for ( int i = 1; i <= kSegmentCount; ++i ) {
+		float t = static_cast< float >( i ) / kSegmentCount;
+
+		// 2次ベジェ補間
+		Vector3 a = Lerp(p0, p1, t);
+		Vector3 b = Lerp(p1, p2, t);
+		Vector3 point = Lerp(a, b, t);
+
+		// ワールド → ビュー射影変換 → ビューポート変換
+		Vector3 screenPrev = Transform(Transform(prev, viewProjectionMatrix), viewport);
+		Vector3 screenCurr = Transform(Transform(point, viewProjectionMatrix), viewport);
+
+		// ライン描画
+		Novice::DrawLine(static_cast< int >( screenPrev.x ), static_cast< int >( screenPrev.y ),
+			static_cast< int >( screenCurr.x ), static_cast< int >( screenCurr.y ),
+			color);
+
+		prev = point;
+	}
+}
 
 

@@ -21,14 +21,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	char preKeys[256] = { 0 };
 
 
-	AABB aabb1 = { ( -0.5f,-0.5f,-0.5f ) , ( 0.0f,0.0f,0.0f ) };
-	AABB aabb2 = { ( 0.2f,0.2f,0.2f ) , ( 1.0f,1.0f,1.0f ) };
+	Vector3 controlPoints[3] = {
+		{-0.8f,0.58f,1.0f},
+		{1.76f,1.0f,-0.3f},
+		{0.94f,-0.7f,2.3f},
+	};
 
-	unsigned int aabbColor1 = WHITE;
 
-
-	Segment segment = { {-0.5f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f} };
-	unsigned int segmentColor = WHITE;
 	Vector3 cameraPosition = { 0.0f,0.0f,-1.0f };
 
 	Vector3 cameraTranslate { 0.0f,1.9f,-6.49f };
@@ -55,27 +54,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 
 
-		// ビュー行列（カメラ位置と向き）
+		// ビュー・プロジェクション・ビューポート行列作成
 		Matrix4x4 cameraMatrix = MakeAffine({ 1.0f, 1.0f, 1.0f }, cameraRotate, cameraTranslate);
 		Matrix4x4 viewMatrix = MatrixMath::Inverse(cameraMatrix);
-
-		// プロジェクション行列
-		Matrix4x4 projectionMatrix = PerspectiveFov(
-			0.45f,
-			float(kWindowWidth) / float(kWindowHeight),
-			0.1f,
-			100.0f
-		);
-
-		// ワールド行列（グリッドや球の位置）
+		Matrix4x4 projectionMatrix = PerspectiveFov(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
 		Matrix4x4 worldMatrix = MakeIdentity4x4();
-
-
-		// 各種行列の合成
 		Matrix4x4 viewProjectionMatrix = Multiply(viewMatrix, projectionMatrix);
 		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
-
-		// ビューポート行列
 		Matrix4x4 viewportMatrix = Viewport(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
 
@@ -91,41 +76,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		///
 
 
-		ImGui::SetNextWindowPos(ImVec2(980, 10), ImGuiCond_Once);  // 右上に配置
-		ImGui::SetNextWindowSize(ImVec2(280, 230), ImGuiCond_Once); // サイズ調整
-
-		ImGui::Begin("Debug"); // ←これを必ず入れる！見た目の枠の開始
-
+		// ImGui UI
+		ImGui::SetNextWindowPos(ImVec2(980, 10), ImGuiCond_Once);
+		ImGui::SetNextWindowSize(ImVec2(280, 230), ImGuiCond_Once);
+		ImGui::Begin("Debug");
 		ImGui::Text("Camera Debug");
 		ImGui::DragFloat3("Camera Position", &cameraTranslate.x, 0.05f);
 		ImGui::DragFloat3("Camera Rotation", &cameraRotate.x, 0.01f);
-
 		ImGui::Separator();
-		ImGui::Text("AABB1");
-		ImGui::DragFloat3("AABB1 Min", &aabb1.min.x, 0.01f);
-		ImGui::DragFloat3("AABB1 Max", &aabb1.max.x, 0.01f);
-		ImGui::Separator();
-		ImGui::Separator();
-		ImGui::Text("Segment");
-		ImGui::DragFloat3("Segment Start", &segment.start.x, 0.01f);
-		ImGui::DragFloat3("Segment End", &segment.end.x, 0.01f);
-		ImGui::End(); // ←これも忘れずに
+		ImGui::Text("Bezier Control Points");
+		ImGui::DragFloat3("p0", &controlPoints[0].x, 0.01f);
+		ImGui::DragFloat3("p1", &controlPoints[1].x, 0.01f);
+		ImGui::DragFloat3("p2", &controlPoints[2].x, 0.01f);
+		ImGui::End();
 		
 		
 
-		AABB fixedAABB1 = FixAABB(aabb1);
+		// ベジェ曲線描画
+		MatrixMath::DrawBezier(controlPoints[0], controlPoints[1], controlPoints[2], worldViewProjectionMatrix, viewportMatrix, GREEN);
 
-		if ( MatrixMath::IsCollision(fixedAABB1, segment) ) {
-			aabbColor1 = RED;
-		} else {
-			aabbColor1 = WHITE;
-		}
-
-		MatrixMath::DrawAABB(aabb1, worldViewProjectionMatrix, viewportMatrix, aabbColor1);
-		Vector3 screenStart = Transform(Transform(segment.start, worldViewProjectionMatrix), viewportMatrix);
-		Vector3 screenEnd = Transform(Transform(segment.end, worldViewProjectionMatrix), viewportMatrix);
-		Novice::DrawLine(( int ) screenStart.x, ( int ) screenStart.y, ( int ) screenEnd.x, ( int ) screenEnd.y, segmentColor);
-
+		// グリッド描画
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix, 0.0f);
 		///
 		/// ↑描画処理ここまで
