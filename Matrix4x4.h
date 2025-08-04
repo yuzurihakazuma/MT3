@@ -98,6 +98,7 @@ namespace MatrixMath {
 
 	void DrawBezier(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewport, uint32_t color);
 
+	void UpdateWorldMatrices(std::array<Matrix4x4, 3>& worldMatrices, const std::array<Vector3, 3>& translate, const std::array<Vector3, 3>& rotate, const std::array<Vector3, 3>& scale);
 
 }
 

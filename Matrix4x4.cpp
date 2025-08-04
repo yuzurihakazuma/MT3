@@ -670,4 +670,22 @@ void MatrixMath::DrawBezier(const Vector3& p0, const Vector3& p1, const Vector3&
 	}
 }
 
+void MatrixMath::UpdateWorldMatrices(std::array<Matrix4x4, 3>& worldMatrices, const std::array<Vector3, 3>& translate, const std::array<Vector3, 3>& rotate, const std::array<Vector3, 3>& scale){
+
+
+	// 肩（親なし）
+	worldMatrices[0] = MakeAffine(scale[0], rotate[0], translate[0]);
+
+	// 肘（肩が親）
+	Matrix4x4 localElbow = MakeAffine(scale[1], rotate[1], translate[1]);
+	worldMatrices[1] = Multiply(localElbow, worldMatrices[0]);
+
+	// 手（肘が親）
+	Matrix4x4 localHand = MakeAffine(scale[2], rotate[2], translate[2]);
+	worldMatrices[2] = Multiply(localHand, worldMatrices[1]);
+
+
+
+}
+
 

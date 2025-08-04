@@ -21,11 +21,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	char preKeys[256] = { 0 };
 
 
-	Vector3 controlPoints[3] = {
-		{-0.8f,0.58f,1.0f},
-		{1.76f,1.0f,-0.3f},
-		{0.94f,-0.7f,2.3f},
-	};
+
+
+
+
+	// 階層構造の初期化[0]は肩[1]は肘[2]は手
+	Vector3 translate[3] = { {0.2f, 1.0f, 0.0f}, {0.4f,0.0f,0.0f},{0.3f,0.0f,0.0f} };
+	Vector3 rotate[3] = { {0.0f,0.0f,-6.8f,},{0.0f,0.0f,-1.4f},{0.0f,0.0f,0.0f} };
+	Vector3 scale[3] = { {1.0f,1.0f,1.0f},{1.0f,1.0f,1.0f }, {1.0f,1.0f,1.0f} };
+	Matrix4x4 worldMatrix[3]; // ワールド行列（肩・肘・手）
+
 
 
 	Vector3 cameraPosition = { 0.0f,0.0f,-1.0f };
@@ -35,6 +40,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 
 	
+
+
+
 
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -58,13 +66,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		Matrix4x4 cameraMatrix = MakeAffine({ 1.0f, 1.0f, 1.0f }, cameraRotate, cameraTranslate);
 		Matrix4x4 viewMatrix = MatrixMath::Inverse(cameraMatrix);
 		Matrix4x4 projectionMatrix = PerspectiveFov(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
-		Matrix4x4 worldMatrix = MakeIdentity4x4();
+		Matrix4x4 worldMatrixRoot = MakeIdentity4x4();
 		Matrix4x4 viewProjectionMatrix = Multiply(viewMatrix, projectionMatrix);
-		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrixRoot, viewProjectionMatrix);
 		Matrix4x4 viewportMatrix = Viewport(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-
-
+		worldMatrix[0] = MakeAffine(scale[0], rotate[0], translate[0]); // 肩
+		worldMatrix[1] = Multiply(MakeAffine(scale[1], rotate[1], translate[1]), worldMatrix[0]); // 肘
+		worldMatrix[2] = Multiply(MakeAffine(scale[2], rotate[2], translate[2]), worldMatrix[1]); // 手
 
 
 		///																							
@@ -76,24 +85,39 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		///
 
 
-		// ImGui UI
+			// ImGui UI
 		ImGui::SetNextWindowPos(ImVec2(980, 10), ImGuiCond_Once);
-		ImGui::SetNextWindowSize(ImVec2(280, 230), ImGuiCond_Once);
+		ImGui::SetNextWindowSize(ImVec2(280, 250), ImGuiCond_Once);
 		ImGui::Begin("Debug");
 		ImGui::Text("Camera Debug");
 		ImGui::DragFloat3("Camera Position", &cameraTranslate.x, 0.05f);
 		ImGui::DragFloat3("Camera Rotation", &cameraRotate.x, 0.01f);
 		ImGui::Separator();
-		ImGui::Text("Bezier Control Points");
-		ImGui::DragFloat3("p0", &controlPoints[0].x, 0.01f);
-		ImGui::DragFloat3("p1", &controlPoints[1].x, 0.01f);
-		ImGui::DragFloat3("p2", &controlPoints[2].x, 0.01f);
+		ImGui::Text("Joint Transforms");
+		ImGui::DragFloat3("Shoulder", &translate[0].x, 0.01f);
+		ImGui::DragFloat3("Elbow", &translate[1].x, 0.01f);
+		ImGui::DragFloat3("Wrist", &translate[2].x, 0.01f);
 		ImGui::End();
-		
 		
 
 		// ベジェ曲線描画
-		MatrixMath::DrawBezier(controlPoints[0], controlPoints[1], controlPoints[2], worldViewProjectionMatrix, viewportMatrix, GREEN);
+			// 変更点ここから：各関節を描画
+		Vector3 shoulderPos = Transform({ 0,0,0 }, worldMatrix[0]);
+		Vector3 elbowPos = Transform({ 0,0,0 }, worldMatrix[1]);
+		Vector3 wristPos = Transform({ 0,0,0 }, worldMatrix[2]);
+
+		Sphere shoulder = { shoulderPos, 0.05f };
+		Sphere elbow = { elbowPos, 0.05f };
+		Sphere wrist = { wristPos, 0.05f };
+
+		DrawSphere(shoulder, viewProjectionMatrix, viewportMatrix, RED);
+		DrawSphere(elbow, viewProjectionMatrix, viewportMatrix, GREEN);
+		DrawSphere(wrist, viewProjectionMatrix, viewportMatrix, BLUE);
+
+		Segment seg1 = { shoulderPos, elbowPos };
+		Segment seg2 = { elbowPos, wristPos };
+		DrawSegment(seg1, viewProjectionMatrix, viewportMatrix, WHITE);
+		DrawSegment(seg2, viewProjectionMatrix, viewportMatrix, WHITE);
 
 		// グリッド描画
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix, 0.0f);
