@@ -27,7 +27,44 @@ Vector3 MatrixMath::Add(const Vector3& v1, const Vector3& v2) {
 	return result;
 
 }
-c
+// 行列の加法
+Matrix4x4 MatrixMath::Add(const Matrix4x4& m1, const Matrix4x4& m2){
+	Matrix4x4 result = {};
+
+	for ( int row = 0; row < 4; row++ ) {
+		for ( int col = 0; col < 4; col++ ) {
+			result.m[row][col] = m1.m[row][col] + m2.m[row][col];
+		}
+	}
+
+	return result;
+}
+// 行列の減法
+Matrix4x4 MatrixMath::Subtract(const Matrix4x4& m1, const Matrix4x4& m2){
+	Matrix4x4 result = {};
+
+	for ( int row = 0; row < 4; row++ ) {
+		for ( int col = 0; col < 4; col++ ) {
+			result.m[row][col] = m1.m[row][col] - m2.m[row][col];
+		}
+	}
+	return result;
+}
+// 4x4行列の積
+Matrix4x4 MatrixMath::Multipty(const Matrix4x4& m1, const Matrix4x4& m2){
+	Matrix4x4 result;
+
+	for ( int row = 0; row < 4; ++row ) {
+		for ( int col = 0; col < 4; ++col ) {
+			result.m[row][col] = 0;
+			for ( int k = 0; k < 4; ++k ) {
+				result.m[row][col] += m1.m[row][k] * m2.m[k][col];
+			}
+		}
+	}
+
+	return result;
+}
 // 減算
 Vector3 MatrixMath::Subtract(const Vector3& v1, const Vector3& v2) {
 
@@ -724,3 +761,12 @@ Matrix4x4 MatrixMath::operator-(const Matrix4x4& m1, const Matrix4x4& m2){
 Matrix4x4 MatrixMath::operator*(const Matrix4x4& m1, const Matrix4x4& m2){
 	return Multiply(m1, m2);
 }
+
+Vector3 MatrixMath::operator-(const Vector3& v){
+	return { -v.x, -v.y, -v.z };
+}
+
+Vector3 MatrixMath::operator+(const Vector3& v){
+	return v;
+}
+

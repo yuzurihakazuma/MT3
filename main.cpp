@@ -25,30 +25,34 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
 
 
-	// 階層構造の初期化[0]は肩[1]は肘[2]は手
-	Vector3 translate[3] = { {0.2f, 1.0f, 0.0f}, {0.4f,0.0f,0.0f},{0.3f,0.0f,0.0f} };
-	Vector3 rotate[3] = { {0.0f,0.0f,-6.8f,},{0.0f,0.0f,-1.4f},{0.0f,0.0f,0.0f} };
-	Vector3 scale[3] = { {1.0f,1.0f,1.0f},{1.0f,1.0f,1.0f }, {1.0f,1.0f,1.0f} };
-	Matrix4x4 worldMatrix[3]; // ワールド行列（肩・肘・手）
+	// --- ベクトル演算テスト ---
+	Vector3 a { 0.2f, 1.0f, 0.0f };
+	Vector3 b { 2.4f, 3.1f, 1.2f };
 
-
-	Vector3 a { 0.2f,1.0f, 0.0f };
-	Vector3 b { 2.4f,3.1f, 1.2f };
 	Vector3 c = a + b;
+	Vector3 d = a - b;
+	Vector3 e = a * 2.4f;
+	Vector3 rotate { 0.4f,1.43f,-0.8f };
+	
+	// 行列演算テスト（回転Zの合成など）
+	Vector3 rotate0 { 0.4f, 0.0f, 0.0f };
+	Vector3 rotate1 { 1.43f, 0.0f, 0.8f };
 
-
-
-
-
-
-
-
+	Matrix4x4 rotateMatrix1 = MakeRotateX(rotate.x);
+	Matrix4x4 rotateMatrix2 = MakeRotateY(rotate.y);
+	Matrix4x4 rotateMatrix3 = MakeRotateZ(rotate.z);
+	Matrix4x4 rotateMatrix = rotateMatrix1 * rotateMatrix2 * rotateMatrix3;
 
 
 	Vector3 cameraPosition = { 0.0f,0.0f,-1.0f };
 
 	Vector3 cameraTranslate { 0.0f,1.9f,-6.49f };
 	Vector3 cameraRotate { 0.26f,0.0f,0.0f };
+
+
+
+
+	
 
 
 	
@@ -71,9 +75,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		///
 
 
-
-
-
 		// ビュー・プロジェクション・ビューポート行列作成
 		Matrix4x4 cameraMatrix = MakeAffine({ 1.0f, 1.0f, 1.0f }, cameraRotate, cameraTranslate);
 		Matrix4x4 viewMatrix = MatrixMath::Inverse(cameraMatrix);
@@ -83,12 +84,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrixRoot, viewProjectionMatrix);
 		Matrix4x4 viewportMatrix = Viewport(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		worldMatrix[0] = MakeAffine(scale[0], rotate[0], translate[0]); // 肩
-		worldMatrix[1] = Multiply(MakeAffine(scale[1], rotate[1], translate[1]), worldMatrix[0]); // 肘
-		worldMatrix[2] = Multiply(MakeAffine(scale[2], rotate[2], translate[2]), worldMatrix[1]); // 手
-
-
-		///																							
+		///																						
 		/// ↑更新処理ここまで
 		///
 
@@ -96,40 +92,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		/// ↓描画処理ここから
 		///
 
-
-			// ImGui UI
-		ImGui::SetNextWindowPos(ImVec2(980, 10), ImGuiCond_Once);
-		ImGui::SetNextWindowSize(ImVec2(280, 250), ImGuiCond_Once);
+	// --- ImGui 表示 ---
 		ImGui::Begin("Debug");
 		ImGui::Text("Camera Debug");
 		ImGui::DragFloat3("Camera Position", &cameraTranslate.x, 0.05f);
 		ImGui::DragFloat3("Camera Rotation", &cameraRotate.x, 0.01f);
-		ImGui::Separator();
-		ImGui::Text("Joint Transforms");
-		ImGui::DragFloat3("Shoulder", &translate[0].x, 0.01f);
-		ImGui::DragFloat3("Elbow", &translate[1].x, 0.01f);
-		ImGui::DragFloat3("Wrist", &translate[2].x, 0.01f);
+
+
+		ImGui::Text("c: %f, %f, %f", c.x, c.y, c.z);
+		ImGui::Text("d: %f, %f, %f", d.x, d.y, d.z);
+		ImGui::Text("e: %f, %f, %f", e.x, e.y, e.z);
+
+		ImGui::Text(
+			"matrix:\n"
+			"%f, %f, %f, %f\n"
+			"%f, %f, %f, %f\n"
+			"%f, %f, %f, %f\n"
+			"%f, %f, %f, %f\n",
+			rotateMatrix.m[0][0], rotateMatrix.m[0][1], rotateMatrix.m[0][2], rotateMatrix.m[0][3],
+			rotateMatrix.m[1][0], rotateMatrix.m[1][1], rotateMatrix.m[1][2], rotateMatrix.m[1][3],
+			rotateMatrix.m[2][0], rotateMatrix.m[2][1], rotateMatrix.m[2][2], rotateMatrix.m[2][3],
+			rotateMatrix.m[3][0], rotateMatrix.m[3][1], rotateMatrix.m[3][2], rotateMatrix.m[3][3]
+		);
+
 		ImGui::End();
 		
 
-		// ベジェ曲線描画
-			// 変更点ここから：各関節を描画
-		Vector3 shoulderPos = Transform({ 0,0,0 }, worldMatrix[0]);
-		Vector3 elbowPos = Transform({ 0,0,0 }, worldMatrix[1]);
-		Vector3 wristPos = Transform({ 0,0,0 }, worldMatrix[2]);
-
-		Sphere shoulder = { shoulderPos, 0.05f };
-		Sphere elbow = { elbowPos, 0.05f };
-		Sphere wrist = { wristPos, 0.05f };
-
-		DrawSphere(shoulder, viewProjectionMatrix, viewportMatrix, RED);
-		DrawSphere(elbow, viewProjectionMatrix, viewportMatrix, GREEN);
-		DrawSphere(wrist, viewProjectionMatrix, viewportMatrix, BLUE);
-
-		Segment seg1 = { shoulderPos, elbowPos };
-		Segment seg2 = { elbowPos, wristPos };
-		DrawSegment(seg1, viewProjectionMatrix, viewportMatrix, WHITE);
-		DrawSegment(seg2, viewProjectionMatrix, viewportMatrix, WHITE);
 
 		// グリッド描画
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix, 0.0f);
