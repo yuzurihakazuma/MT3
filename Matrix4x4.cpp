@@ -27,6 +27,7 @@ Vector3 MatrixMath::Add(const Vector3& v1, const Vector3& v2) {
 	return result;
 
 }
+c
 // 減算
 Vector3 MatrixMath::Subtract(const Vector3& v1, const Vector3& v2) {
 
@@ -685,7 +686,41 @@ void MatrixMath::UpdateWorldMatrices(std::array<Matrix4x4, 3>& worldMatrices, co
 	worldMatrices[2] = Multiply(localHand, worldMatrices[1]);
 
 
+	
+
 
 }
 
+// Vector3 の演算子オーバーロード
+Vector3 MatrixMath::operator+(const Vector3& v1, const Vector3& v2){
+	return Add(v1, v2);
+}
 
+Vector3 MatrixMath::operator-(const Vector3& v1, const Vector3& v2){
+	return Subtract(v1, v2);
+}
+
+Vector3 MatrixMath::operator*(float s, const Vector3& v){
+	return Multiply(s, v);
+}
+
+Vector3 MatrixMath::operator*(const Vector3& v, float s){
+	return Multiply(s, v);
+}
+
+Vector3 MatrixMath::operator/(const Vector3& v, float s){
+	return Multiply(1.0f / s, v);
+}
+
+// Matrix4x4 の演算子オーバーロード
+Matrix4x4 MatrixMath::operator+(const Matrix4x4& m1, const Matrix4x4& m2){
+	return Add(m1, m2);
+}
+
+Matrix4x4 MatrixMath::operator-(const Matrix4x4& m1, const Matrix4x4& m2){
+	return Subtract(m1, m2);
+}
+
+Matrix4x4 MatrixMath::operator*(const Matrix4x4& m1, const Matrix4x4& m2){
+	return Multiply(m1, m2);
+}

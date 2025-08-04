@@ -32,6 +32,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	Matrix4x4 worldMatrix[3]; // ワールド行列（肩・肘・手）
 
 
+	Vector3 a { 0.2f,1.0f, 0.0f };
+	Vector3 b { 2.4f,3.1f, 1.2f };
+	Vector3 c = a + b;
+
+
+
+
+
+
+
+
+
 
 	Vector3 cameraPosition = { 0.0f,0.0f,-1.0f };
 

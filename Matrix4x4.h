@@ -9,6 +9,8 @@ namespace MatrixMath {
 
 	// 加算
 	Vector3 Add(const Vector3& v1, const Vector3& v2);
+	Matrix4x4 Add(const Matrix4x4& m1, Matrix4x4 m2);
+
 	// 減算
 	Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 	
@@ -99,6 +101,24 @@ namespace MatrixMath {
 	void DrawBezier(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewport, uint32_t color);
 
 	void UpdateWorldMatrices(std::array<Matrix4x4, 3>& worldMatrices, const std::array<Vector3, 3>& translate, const std::array<Vector3, 3>& rotate, const std::array<Vector3, 3>& scale);
+
+	// Vector3 の演算子オーバーロード
+	Vector3 operator+(const Vector3& v1, const Vector3& v2);
+
+	Vector3 operator-(const Vector3& v1, const Vector3& v2);
+
+	Vector3 operator*(float s, const Vector3& v);
+
+	Vector3 operator*(const Vector3& v, float s);
+
+	Vector3 operator/(const Vector3& v, float s);
+
+	// Matrix4x4 の演算子オーバーロード
+	Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2);
+	Matrix4x4 operator-(const Matrix4x4& m1, const Matrix4x4& m2);
+
+	Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2);
+
 
 }
 
